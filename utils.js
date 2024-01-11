@@ -90,7 +90,7 @@ async function handleStickerGeneration(msg, sender) {
 }
 
 async function handleImageStickerGeneration(msg, sender, resizeWidth) {
-    const { data } = await msg.downloadMedia();
+    const data  = await msg.downloadMedia();
     const resizedImageData = await resizeImage(data, resizeWidth);
     await sendMediaSticker(msg.from, MediaType.Image, resizedImageData);
     await msg.reply("Sticker gerado com sucesso 😎");
