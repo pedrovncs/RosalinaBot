@@ -15,8 +15,12 @@
     
 🤑 Envie "/esmola" para receber as chaves do pix da Rosalina e ajudar a manter ela respirando por aparelhos.
 
+📝 Agradeça a Rosalina marcando ela e dizendo palavras bonitas (ou não).
+
 📌Parâmetros Opcionais
 ❗𝙋𝙖𝙧𝙖𝙢𝙚𝙩𝙧𝙤𝙨 𝙙𝙚 𝙙𝙞𝙢𝙚𝙣𝙨𝙞𝙤𝙣𝙖𝙢𝙚𝙣𝙩𝙤 𝙛𝙪𝙣𝙘𝙞𝙤𝙣𝙖𝙢 𝙖𝙥𝙚𝙣𝙖𝙨 𝙘𝙤𝙢 𝙞𝙢𝙖𝙜𝙚𝙣𝙨
     ℹ "/figurinha -alto" para resolução máxima.
     ℹ "/figurinha -baixo" para uma resolução cagada. 
     ℹ "/figurinha -original" para usar a imagem no tamanho original
+
+👨‍💻 Meu código está em https://github.com/pedrovncs/RosalinaBot, abre uns pull request lá pô, mim ajude a crescer 

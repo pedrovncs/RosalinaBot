@@ -42,12 +42,26 @@ function getDefaultFfmpegPath() {
     }
 }
 
+function getDefaultChromePath() {
+    const isWindows = process.platform === 'win32';
+    const isLinux = process.platform === 'linux';
+
+    if (isWindows) {
+        return "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+    } else if (isLinux) {
+        return "/usr/bin/google-chrome";
+    } else {
+        return null;
+    }
+}
+
 async function resizeImage(imageData, resizeWidth) {
     if (resizeWidth === null) {
         return imageData;
     }
     try {
-        const resizedImageBuffer = await sharp(Buffer.from(imageData, 'base64'))
+        const imageString = Buffer.isBuffer(imageData) ? imageData.toString('base64') : imageData;
+        const resizedImageBuffer = await sharp(Buffer.from(imageString, 'base64'))
             .resize({ width: resizeWidth, height: resizeWidth })
             .toBuffer();
         return resizedImageBuffer.toString('base64');
@@ -56,6 +70,7 @@ async function resizeImage(imageData, resizeWidth) {
         throw error; 
     }
 }
+
 
 async function generateSticker(msg, sender) {
     try {
@@ -90,25 +105,26 @@ async function handleStickerGeneration(msg, sender) {
 }
 
 async function handleImageStickerGeneration(msg, sender, resizeWidth) {
-    const data  = await msg.downloadMedia();
+    const { data }  = await msg.downloadMedia();
     const resizedImageData = await resizeImage(data, resizeWidth);
-    await sendMediaSticker(msg.from, MediaType.Image, resizedImageData);
+    await sendMediaSticker(sender, MediaType.Image, resizedImageData);
     await msg.reply("Sticker gerado com sucesso 😎");
     msg.react("✅");
 }
 
 async function handleVideoStickerGeneration(msg, sender) {
-    const data = await msg.downloadMedia();
-    await sendMediaSticker(msg.from, MediaType.Video, data);
-    await msg.reply("Sticker gerado com sucesso 😎");
-    msg.react("✅");
+        const temp = await msg.downloadMedia();
+        await sendMediaSticker(sender, MediaType.Video, temp.data);
+        await msg.reply("Sticker gerado com sucesso 😎");
+        msg.react("✅");
+        await msg.reply("❌ Erro ao gerar Sticker de vídeo!");
+        msg.react("❌");
 }
+
 
 async function handleChatStickerGeneration(msg, sender, resizeWidth) {
     const url = msg.body.split(" ").reduce((acc, elem) => acc ? acc : (urlRegex().test(elem) ? elem : false), false);
-    
     if (url) {
-
         await handleUrlStickerGeneration(msg, sender, resizeWidth, url);
     } else {
         await msg.reply("❌ Erro, URL inválida!");
@@ -184,6 +200,10 @@ function saveLastDeployTime(lastDeployTime) {
     }
 }
 
+function isClientMentioned(mentions, wid) {
+    return mentions && mentions.some(contact => contact.id.user === wid);
+}
+
 module.exports = {
     getDefaultFfmpegPath,
     resizeImage,
@@ -193,4 +213,6 @@ module.exports = {
     generateSticker,
     saveLastDeployTime,
     cleanUp,
+    getDefaultChromePath,
+    isClientMentioned,
 }
