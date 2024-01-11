@@ -98,7 +98,7 @@ async function handleImageStickerGeneration(msg, sender, resizeWidth) {
 }
 
 async function handleVideoStickerGeneration(msg, sender) {
-    const { data } = await msg.downloadMedia();
+    const data = await msg.downloadMedia();
     await sendMediaSticker(msg.from, MediaType.Video, data);
     await msg.reply("Sticker gerado com sucesso 😎");
     msg.react("✅");
