@@ -59,7 +59,6 @@ client.on('message', async msg => {
                 null
             }
         } else {
-            msg.reply("❌ Você não tem permissão para usar esse bot, canalha! 😡");
             msg.react("❌");
             return;
         }

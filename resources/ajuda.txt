@@ -1,4 +1,4 @@
-❔Comandos da Rosalina  𝐁𝐄𝐓𝐀 𝘷𝘦𝘳𝘴𝘪𝘰𝘯
+❔Comandos da Rosalina  *𝐁𝐄𝐓𝐀 𝘷𝘦𝘳𝘴𝘪𝘰𝘯*
 
 🤳 Envie uma Foto/GIF/Vídeo com a legenda "/figurinha" para gerar uma figurinha.
 ❗ 𝙑𝙞𝙙𝙚𝙤𝙨 𝙚 𝙂𝙄𝙁𝙨 𝙣𝙖𝙤 𝙨𝙖𝙤 𝙧𝙚𝙙𝙞𝙢𝙚𝙣𝙨𝙞𝙤𝙣𝙖𝙙𝙤𝙨
@@ -23,4 +23,4 @@
     ℹ "/figurinha -baixo" para uma resolução cagada. 
     ℹ "/figurinha -original" para usar a imagem no tamanho original
 
-👨‍💻 Meu código está em https://github.com/pedrovncs/RosalinaBot, abre uns pull request lá pô, mim ajude a crescer 
+👨‍💻 Meu código está em https://github.com/pedrovncs/RosalinaBot, abre uns pull request lá pô, miajuda
