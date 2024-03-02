@@ -195,7 +195,6 @@ function isClientMentioned(mentions, wid) {
 }
 
 module.exports = {
-    getDefaultFfmpegPath,
     resizeImage,
     sendMediaSticker,
     sendMediaImage,
