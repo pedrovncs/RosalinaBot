@@ -1,5 +1,5 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
-const { cleanUp, getDefaultFfmpegPath, saveLastDeployTime, getDefaultChromePath, isClientMentioned } = require('./utils');
+const { cleanUp, saveLastDeployTime, getDefaultChromePath, isClientMentioned } = require('./utils');
 const { handleAjuda } = require('./commands/handleAjuda');
 const qrcode = require('qrcode-terminal');
 const { allowedIds, adminIds } = require('./config');
@@ -11,11 +11,10 @@ const handleSticker = require('./commands/handleSticker');
 const handleStickerCommand = require('./commands/handleStickerCommand');
 const handleFeedback = require('./commands/handleFeedback');
 
-
 let flagLimpo = false;
 
 const puppeteerdata = getDefaultChromePath() ? { executablePath: getDefaultChromePath(), args: ['--no-sandbox,'] } : {};
-const ffmpegPath = getDefaultFfmpegPath();
+const ffmpegPath = require('ffmpeg-static');
 
 const client = new Client({
     authStrategy: new LocalAuth(),

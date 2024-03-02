@@ -29,27 +29,13 @@ async function cleanUp(client) {
     return true;
 }
 
-function getDefaultFfmpegPath() {
-    const isWindows = process.platform === 'win32';
-    const isLinux = process.platform === 'linux';
-
-    if (isWindows) {
-        return "C:\\Users\\pedro\\Downloads\\ffmpeg-2023-11-20-git-e56d91f8a8-full_build\\bin\\ffmpeg.exe";
-    } else if (isLinux) {
-        return "/usr/bin/ffmpeg";
-    } else {
-        throw new Error('Sistema operacional não suportado');
-    }
-}
-
 function getDefaultChromePath() {
     const isWindows = process.platform === 'win32';
     const isLinux = process.platform === 'linux';
-
     if (isWindows) {
         return "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
     } else if (isLinux) {
-        return "/usr/bin/google-chrome";
+        return "/usr/bin/google-chrome-stable";
     } else {
         return null;
     }
@@ -113,12 +99,16 @@ async function handleImageStickerGeneration(msg, sender, resizeWidth) {
 }
 
 async function handleVideoStickerGeneration(msg, sender) {
+    try{
         const temp = await msg.downloadMedia();
         await sendMediaSticker(sender, MediaType.Video, temp.data);
         await msg.reply("Sticker gerado com sucesso 😎");
         msg.react("✅");
+    } catch {
+        console.error('Error generating video sticker:', error.message);
         await msg.reply("❌ Erro ao gerar Sticker de vídeo!");
         msg.react("❌");
+    }
 }
 
 
