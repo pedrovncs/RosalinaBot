@@ -8,7 +8,7 @@
             
 🔗 Envie "/figurinha" seguido do URL da imagem para gerar uma figurinha.
     ℹ Apenas imagens são suportadas.
-    ℹ Imagem em .png funcionam neste método.
+    ℹ Imagens em .png funcionam neste método.
             
 🔀 Envie uma figurinha para revertê-la automaticamente para uma imagem.
     ℹ Não funciona muito bem com figurinhas animadas.
@@ -21,6 +21,7 @@
 ❗𝙋𝙖𝙧𝙖𝙢𝙚𝙩𝙧𝙤𝙨 𝙙𝙚 𝙙𝙞𝙢𝙚𝙣𝙨𝙞𝙤𝙣𝙖𝙢𝙚𝙣𝙩𝙤 𝙛𝙪𝙣𝙘𝙞𝙤𝙣𝙖𝙢 𝙖𝙥𝙚𝙣𝙖𝙨 𝙘𝙤𝙢 𝙞𝙢𝙖𝙜𝙚𝙣𝙨
     ℹ "/figurinha -alto" para resolução máxima.
     ℹ "/figurinha -baixo" para uma resolução cagada. 
+    ℹ "/figurinha -crop" para usar o crop no redimensionamento.
     ℹ "/figurinha -original" para usar a imagem no tamanho original
 
-👨‍💻 Meu código está em https://github.com/pedrovncs/RosalinaBot, abre uns pull request lá pô, miajuda
+👨‍💻 Meu código está em https://github.com/pedrovncs/RosalinaBot, abre uns pull request lá pô, mimajude

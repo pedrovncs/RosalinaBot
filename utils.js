@@ -51,7 +51,7 @@ async function resizeImage(imageData, resizeWidth) {
             .resize({ 
                 width: resizeWidth, 
                 height: resizeWidth,  
-                fit: sharp.fit.fill, 
+                fit: (resizeWidth === 511 ? null : sharp.fit.fill), 
                 position: sharp.strategy.entropy 
             })
             .toBuffer();
@@ -176,6 +176,8 @@ function getSizeFromParam(param){
             return 512;
         case '-original':
             return null;
+        case '-crop':
+            return 511;
         default:
             return parseInt(param) || 256;
     }
