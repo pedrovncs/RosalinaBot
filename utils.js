@@ -14,7 +14,7 @@ let defaultClient = null;
 
 async function cleanUp(client) {
     defaultClient = client;
-    const cleanTime = 0;
+    const cleanTime = 5000;
     await new Promise(resolve => setTimeout(resolve, cleanTime));
     for (const id of allowedIds) {
         const chat = await defaultClient.getChatById(id);
@@ -48,7 +48,12 @@ async function resizeImage(imageData, resizeWidth) {
     try {
         const imageString = Buffer.isBuffer(imageData) ? imageData.toString('base64') : imageData;
         const resizedImageBuffer = await sharp(Buffer.from(imageString, 'base64'))
-            .resize({ width: resizeWidth, height: resizeWidth })
+            .resize({ 
+                width: resizeWidth, 
+                height: resizeWidth,  
+                fit: sharp.fit.fill, 
+                position: sharp.strategy.entropy 
+            })
             .toBuffer();
         return resizedImageBuffer.toString('base64');
     } catch (error) {
