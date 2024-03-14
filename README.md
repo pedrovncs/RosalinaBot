@@ -2,6 +2,9 @@
  
 Rosalina é um bot para Whatsapp com a funcionalidade principal de criar figurinhas! 
 
+## Demo
+![](https://i.imgur.com/QxEx7ka.gif)
+
 ## Tecnologias
 
 - [whatsapp-web.js](https://wwebjs.dev/)
@@ -11,4 +14,4 @@ Rosalina é um bot para Whatsapp com a funcionalidade principal de criar figurin
 - [fluent-ffmpeg](https://github.com/fluent-ffmpeg/node-fluent-ffmpeg)
 - [sharp](https://sharp.pixelplumbing.com/)
 
-## 
+
