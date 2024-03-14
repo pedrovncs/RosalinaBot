@@ -1,4 +1,4 @@
-﻿# Rosalina Bit
+﻿# Rosalina Bot
  
 Rosalina é um bot para Whatsapp com a funcionalidade principal de criar figurinhas! 
 
