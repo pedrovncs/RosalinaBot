@@ -26,6 +26,7 @@ const goodWords = [
 
 const badWords = [
     "vai tomar no cu",
+    "canalha",
     "vai se fuder",
     "vai se foder",
     "vai tomar no seu cu",

@@ -1,15 +1,14 @@
 const axios = require('axios');
 const sharp = require('sharp');
 const fs = require('fs');
-const readlineSync = require('readline-sync');
-const path = require('path');
 const { MessageMedia } = require('whatsapp-web.js');
 const config = require('./config.js');
 const { allowedIds } = config;
 const urlRegex = require('url-regex');
-const {Commands} = require('./constants');
+const { Commands } = require('./constants');
 const { STICKER_COMMAND } = Commands;
 const { MediaType } = require('./constants');
+const ffmpeg = require('fluent-ffmpeg');
 let defaultClient = null;
 
 async function cleanUp(client) {
@@ -48,17 +47,17 @@ async function resizeImage(imageData, resizeWidth) {
     try {
         const imageString = Buffer.isBuffer(imageData) ? imageData.toString('base64') : imageData;
         const resizedImageBuffer = await sharp(Buffer.from(imageString, 'base64'))
-            .resize({ 
-                width: resizeWidth, 
-                height: resizeWidth,  
-                fit: (resizeWidth === 511 ? null : sharp.fit.fill), 
-                position: sharp.strategy.entropy 
+            .resize({
+                width: resizeWidth,
+                height: resizeWidth,
+                fit: (resizeWidth === 511 ? null : sharp.fit.fill),
+                position: sharp.strategy.entropy
             })
             .toBuffer();
         return resizedImageBuffer.toString('base64');
     } catch (error) {
         console.error('Error resizing image:', error);
-        throw error; 
+        throw error;
     }
 }
 
@@ -79,12 +78,16 @@ async function handleStickerGeneration(msg, sender) {
     const commandParts = msg.body.split(" ");
     const stickerSizeCommandIndex = commandParts.indexOf(STICKER_COMMAND);
     const resizeWidth = getSizeFromCommand(commandParts, stickerSizeCommandIndex);
+
+    const force = commandParts.includes('-force');
+    const originalAR = commandParts.includes('-original');
+
     switch (msg.type) {
         case "image":
             await handleImageStickerGeneration(msg, sender, resizeWidth);
             break;
         case "video":
-            await handleVideoStickerGeneration(msg, sender);
+            await handleVideoStickerGeneration(msg, sender, force, originalAR);
             break;
         case "chat":
             await handleChatStickerGeneration(msg, sender, resizeWidth);
@@ -96,23 +99,35 @@ async function handleStickerGeneration(msg, sender) {
 }
 
 async function handleImageStickerGeneration(msg, sender, resizeWidth) {
-    const { data }  = await msg.downloadMedia();
+    const { data } = await msg.downloadMedia();
     const resizedImageData = await resizeImage(data, resizeWidth);
     await sendMediaSticker(sender, MediaType.Image, resizedImageData);
     await msg.reply("Sticker gerado com sucesso 😎");
     msg.react("✅");
 }
 
-async function handleVideoStickerGeneration(msg, sender) {
-    try{
+async function handleVideoStickerGeneration(msg, sender, force, originalAR) {
+    if (!fs.existsSync('./resources/outputs')) {
+        fs.mkdirSync('./resources/outputs');
+    } else {
+        fs.rmSync('./resources/outputs', { recursive: true });
+        fs.mkdirSync('./resources/outputs');
+    }
+
+    try {
         const temp = await msg.downloadMedia();
-        await sendMediaSticker(sender, MediaType.Video, temp.data);
+        const tempPath = './resources/outputs/temp.mp4';
+        fs.writeFileSync(tempPath, temp.data, 'base64');
+        const resizedData = await resizeVideo(tempPath, force, originalAR);
+        await sendMediaStickerFromFile(msg, resizedData);
         await msg.reply("Sticker gerado com sucesso 😎");
-        msg.react("✅");
-    } catch {
-        console.error('Error generating video sticker:', error.message);
+        await msg.react("✅");
+        fs.rmSync('./resources/outputs', { recursive: true });
+    } catch (error) {
+        console.error('Error generating video sticker:', error);
         await msg.reply("❌ Erro ao gerar Sticker de vídeo!");
-        msg.react("❌");
+        await msg.react("❌");
+        fs.rmSync('./resources/outputs', { recursive: true })
     }
 }
 
@@ -149,26 +164,70 @@ async function handleUrlStickerGeneration(msg, sender, resizeWidth, url) {
 
 function getSizeFromCommand(commandParts, stickerSizeCommandIndex) {
     let resizeWidth = 256;
-    
+
     if (stickerSizeCommandIndex !== -1 && commandParts.length > stickerSizeCommandIndex + 1) {
         const sizeParam = commandParts[stickerSizeCommandIndex + 1];
         resizeWidth = getSizeFromParam(sizeParam);
     }
-
     return resizeWidth;
 }
 
-async function sendMediaSticker(sender, type, data){
+async function sendMediaSticker(sender, type, data) {
     const media = new MessageMedia(type.contentType, data, type.fileName)
     await defaultClient.sendMessage(sender, media, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerPack: "Grifo's Gallery" })
 }
 
-async function sendMediaImage(sender, type, data){
+async function sendMediaStickerFromFile(msg, filePath) {
+    const sender = msg.from;
+    const media = MessageMedia.fromFilePath(filePath);
+    await defaultClient.sendMessage(sender, media, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerPack: "Grifo's Gallery" });
+}
+
+async function resizeVideo(inputFile, force, originalAR) {
+    let outputFile = `./resources/outputs/tempOutput.mp4`;
+    const outputOptions = [
+        '-movflags',
+        'frag_keyframe+empty_moov',
+        '-preset ultrafast',
+    ];
+
+    if (originalAR && !force) {
+        null;
+    } else if (originalAR && force) {
+        outputOptions.push('-vf', 'setpts=0.5*PTS', '-r', '20');
+    } else if (force) {
+        outputOptions.push('-vf', 'scale=512:512,setpts=0.5*PTS', '-r', '20');
+    } else {
+        outputOptions.push('-vf', 'scale=512:512');
+    }
+
+    await new Promise((resolve, reject) => {
+        ffmpeg(inputFile)
+            .videoCodec('libx265')
+            .addOutputOptions(outputOptions)
+            .on('error', (err) => {
+                reject('Erro ao redimensionar o vídeo:', err);
+            })
+            .on('end', () => {
+                resolve();
+            })
+            .save(outputFile);
+    });
+
+    return outputFile;
+}
+
+
+
+
+
+
+async function sendMediaImage(sender, type, data) {
     const media = new MessageMedia(type.contentType, data, type.fileName);
     await defaultClient.sendMessage(sender, media);
 }
 
-function getSizeFromParam(param){
+function getSizeFromParam(param) {
     switch (param.toLowerCase()) {
         case '-baixo':
             return 72;

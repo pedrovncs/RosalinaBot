@@ -37,11 +37,12 @@ client.on('ready', () => {
 
 client.on('message', async msg => {
     if (flagLimpo) {
+        console.log(`Mensagem recebida nao autorizada de: ${msg.from}`)
         if (allowedIds.includes(msg.from) || allowedIds.length === 0 || adminIds.includes(msg.from)) {
             const sender = msg.from.startsWith(client.info.wid.user) ? msg.to : msg.from;
             const mentions = await msg.getMentions();
             console.log(`Mensagem recebida de ${sender}`)
-            if (msg.body.split(" ").includes(Commands.STICKER_COMMAND)) {
+            if (msg.body.split(" ").toString().toLowerCase().includes(Commands.STICKER_COMMAND)) {
                 handleStickerCommand(sender, client, msg);
             } else if (msg.body === Commands.PING_COMMAND) {
                 handlePing(sender, client, msg);

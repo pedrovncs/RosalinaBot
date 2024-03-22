@@ -2,6 +2,7 @@ const fs = require('fs');
 const { MessageMedia } = require('whatsapp-web.js');
 const { sendMediaImage } = require('../utils');
 const { MediaType } = require('../constants');
+const { default: ffmpegPath } = require('ffmpeg-static');
 
 const legenda = `🤔 Se a figurinha for animada, aqui está a imagem revertida do sticker que você me enviou, abra em um app que suporte .webp.
 
@@ -31,9 +32,18 @@ async function handleSticker(sender, client, msg){
                 }
                 console.log('Tamanho do arquivo em kB:', stats.size)
                 if (stats.size / 1024 > 100) {
+                        ffmpeg(stickerPath)
+                        .toFormat('mp4')
+                        .save('./resources/sticker.mp4')
+                        .on('end', function() {
+                            console.log('Sticker convertido para MP4 com sucesso!');
+                        })
+                        .on('error', function(err) {
+                            console.error('Erro ao converter sticker para MP4:', err.message);
+                        })
                     msg.reply(replyText);
-                    const media = new MessageMedia('image/webp', data, 'sticker.webp');
-                    client.sendMessage(sender, media, { sendMediaAsDocument: true, caption: legenda });
+                    const media = new MessageMedia('video/mp4', fs.readFileSync('./resources/sticker.mp4'), 'sticker.mp4');
+                    client.sendMessage(sender, media, {sendVideoAsGif: true, caption: legenda });
                 } else {
                     msg.reply('Revertendo Sticker ⏳ ...');
                 }
