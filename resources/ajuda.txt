@@ -1,10 +1,6 @@
 ❔Comandos da Rosalina  *𝐁𝐄𝐓𝐀 𝘷𝘦𝘳𝘴𝘪𝘰𝘯*
 
 🤳 Envie uma Foto/GIF/Vídeo com a legenda "/figurinha" para gerar uma figurinha.
-❗ 𝙑𝙞𝙙𝙚𝙤𝙨 𝙚 𝙂𝙄𝙁𝙨 𝙣𝙖𝙤 𝙨𝙖𝙤 𝙧𝙚𝙙𝙞𝙢𝙚𝙣𝙨𝙞𝙤𝙣𝙖𝙙𝙤𝙨
-    ℹ Redimensionar vídeos em ezgif.com/resize-video 
-    ℹ Redimensionar gifs em ezgif.com/resize 
-    ℹ Use uma resolução de aspecto 1:1.
             
 🔗 Envie "/figurinha" seguido do URL da imagem para gerar uma figurinha.
     ℹ Apenas imagens são suportadas.
@@ -18,10 +14,12 @@
 📝 Agradeça a Rosalina marcando ela e dizendo palavras bonitas (ou não).
 
 📌Parâmetros Opcionais
-❗𝙋𝙖𝙧𝙖𝙢𝙚𝙩𝙧𝙤𝙨 𝙙𝙚 𝙙𝙞𝙢𝙚𝙣𝙨𝙞𝙤𝙣𝙖𝙢𝙚𝙣𝙩𝙤 𝙛𝙪𝙣𝙘𝙞𝙤𝙣𝙖𝙢 𝙖𝙥𝙚𝙣𝙖𝙨 𝙘𝙤𝙢 𝙞𝙢𝙖𝙜𝙚𝙣𝙨
-    ℹ "/figurinha -alto" para resolução máxima.
-    ℹ "/figurinha -baixo" para uma resolução cagada. 
-    ℹ "/figurinha -crop" para usar o crop no redimensionamento.
-    ℹ "/figurinha -original" para usar a imagem no tamanho original
+📷 - funciona com imagens.
+🎥 - funciona com vídeos.
+    ℹ "/figurinha -alto" para resolução máxima. 📷
+    ℹ "/figurinha -baixo" para uma resolução cagada. 📷
+    ℹ "/figurinha -crop" para usar o crop no redimensionamento. 📷
+    ℹ "/figurinha -original" para usar a imagem ou vídeo no tamanho original 📷 🎥 
+    ℹ "/figurinha -force" para forçar o dobro de duração do sticker (14s). 🎥 ⚠ₑₓₚₑᵣᵢₘₑₙₜₐₗ
 
 👨‍💻 Meu código está em https://github.com/pedrovncs/RosalinaBot, abre uns pull request lá pô, mimajude

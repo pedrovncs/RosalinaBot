@@ -40,7 +40,7 @@ function getDefaultChromePath() {
     }
 }
 
-async function resizeImage(imageData, resizeWidth) {
+async function resizeImage(imageData, resizeWidth, crop) {
     if (resizeWidth === null) {
         return imageData;
     }
@@ -50,7 +50,7 @@ async function resizeImage(imageData, resizeWidth) {
             .resize({
                 width: resizeWidth,
                 height: resizeWidth,
-                fit: (resizeWidth === 511 ? null : sharp.fit.fill),
+                fit: (crop ? null : sharp.fit.fill),
                 position: sharp.strategy.entropy
             })
             .toBuffer();
@@ -79,12 +79,13 @@ async function handleStickerGeneration(msg, sender) {
     const stickerSizeCommandIndex = commandParts.indexOf(STICKER_COMMAND);
     const resizeWidth = getSizeFromCommand(commandParts, stickerSizeCommandIndex);
 
+    const crop = commandParts.includes('-crop');
     const force = commandParts.includes('-force');
     const originalAR = commandParts.includes('-original');
 
     switch (msg.type) {
         case "image":
-            await handleImageStickerGeneration(msg, sender, resizeWidth);
+            await handleImageStickerGeneration(msg, sender, resizeWidth, crop);
             break;
         case "video":
             await handleVideoStickerGeneration(msg, sender, force, originalAR);
@@ -98,9 +99,9 @@ async function handleStickerGeneration(msg, sender) {
     }
 }
 
-async function handleImageStickerGeneration(msg, sender, resizeWidth) {
+async function handleImageStickerGeneration(msg, sender, resizeWidth, crop) {
     const { data } = await msg.downloadMedia();
-    const resizedImageData = await resizeImage(data, resizeWidth);
+    const resizedImageData = await resizeImage(data, resizeWidth, crop);
     await sendMediaSticker(sender, MediaType.Image, resizedImageData);
     await msg.reply("Sticker gerado com sucesso 😎");
     msg.react("✅");
@@ -217,11 +218,6 @@ async function resizeVideo(inputFile, force, originalAR) {
     return outputFile;
 }
 
-
-
-
-
-
 async function sendMediaImage(sender, type, data) {
     const media = new MessageMedia(type.contentType, data, type.fileName);
     await defaultClient.sendMessage(sender, media);
@@ -235,8 +231,6 @@ function getSizeFromParam(param) {
             return 512;
         case '-original':
             return null;
-        case '-crop':
-            return 511;
         default:
             return parseInt(param) || 256;
     }

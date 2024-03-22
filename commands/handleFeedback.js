@@ -21,7 +21,6 @@ const goodWords = [
     "perfeita",
     "good bot",
     "boa garota",
-
 ]
 
 const badWords = [
@@ -51,10 +50,11 @@ const badWords = [
     "eu te abomino",
     "🖕",
     "👎",
-    "leandrinha",
     "duart",
-    "yuri",
     "faz o L",
+    "piranha",
+    "cachorra", 
+    "vadia",
 ]
 
 const goodReactions = ["😄", "😃", "😀", "😍", "😊", "🥰", "😻", "💖", "❤️", "🌈", "🌟", "😁", "😎", "🤗", "👍"];
