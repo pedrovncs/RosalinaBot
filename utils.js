@@ -11,9 +11,8 @@ const { MediaType } = require('./constants');
 const ffmpeg = require('fluent-ffmpeg');
 let defaultClient = null;
 
-async function cleanUp(client) {
+async function cleanUp(client, cleanTime) {
     defaultClient = client;
-    const cleanTime = 5000;
     await new Promise(resolve => setTimeout(resolve, cleanTime));
     for (const id of allowedIds) {
         const chat = await defaultClient.getChatById(id);

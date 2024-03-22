@@ -12,6 +12,7 @@ const handleStickerCommand = require('./commands/handleStickerCommand');
 const handleFeedback = require('./commands/handleFeedback');
 
 let flagLimpo = false;
+const cleanTime = 5000;
 
 const puppeteerdata = getDefaultChromePath() ? { executablePath: getDefaultChromePath(), args: ['--no-sandbox,'] } : {};
 const ffmpegPath = require('ffmpeg-static');
@@ -27,11 +28,11 @@ client.on('qr', qr => {
 });
 
 client.on('ready', () => {
-    flagLimpo = cleanUp(client);
+    flagLimpo = cleanUp(client,cleanTime);
     saveLastDeployTime(new Date());
     setTimeout(() => {
         client.sendMessage(adminIds[0], `-Novo deploy! 🚀 `);
-    }, 5000);
+    }, cleanTime + 1000);
     console.log('Rosalina rodando!');
 });
 

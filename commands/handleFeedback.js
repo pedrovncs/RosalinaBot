@@ -5,6 +5,7 @@ const goodWords = [
     "obrigado",
     "valeu",
     "vlw",
+    "boa",
     "boa garota",
     "te amo",
     "te adoro",
@@ -64,16 +65,19 @@ const badReactions = ["😠", "😡", "😢", "😞", "😓", "😔", "😣", "�
 
 async function handleFeedback(msg) {
     const rng = () => Math.floor(Math.random() * 15);
-    const nome = msg.getContact().pushname;
+    const contact=  await msg.getContact();
+    console.log(contact)
+    const nome = contact.pushname || contact.number; 
+
     if (goodWords.some(word => msg.body.toLowerCase().includes(word))) {
         goodCount++;
         await msg.react(goodReactions[rng()]);
-        msg.reply(`Obrigado pelo carinho! ${goodReactions[rng()]}, ${nome}, já fui elogiada ${goodCount} vezes `);
+        msg.reply(`Obrigado ${nome}! ${goodReactions[rng()]} `);
 
     } else if (badWords.some(word => msg.body.toLowerCase().includes(word))) {
         badCount++;
         await msg.react(badReactions[rng()]);
-        msg.reply(`FAZ MELHOR OTÁRIO ${badReactions[rng()]}, já fui xingada ${badCount} vezes `);
+        msg.reply(`FAZ MELHOR OTÁRIO ${badReactions[rng()]} `);
         console.log(`Reclamações: ${badCount}`);
     }
 }
