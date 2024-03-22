@@ -194,9 +194,9 @@ async function resizeVideo(inputFile, force, originalAR) {
     if (originalAR && !force) {
         null;
     } else if (originalAR && force) {
-        outputOptions.push('-vf', 'setpts=0.5*PTS', '-r', '20');
+        outputOptions.push('-vf', 'setpts=0.4*PTS', '-r', '10');
     } else if (force) {
-        outputOptions.push('-vf', 'scale=512:512,setpts=0.5*PTS', '-r', '20');
+        outputOptions.push('-vf', 'scale=512:512,setpts=0.4*PTS', '-r', '10');
     } else {
         outputOptions.push('-vf', 'scale=512:512');
     }
