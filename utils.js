@@ -62,12 +62,9 @@ async function resizeImage(imageData, resizeWidth, crop) {
     }
 }
 
-async function addTextToImage(imageData, textUp, textDown) {
+async function addTextToImage(imageData, textUp, textDown, crop) {
     const inputImagePath = './resources/tempInput.png';
     const outputImagePath = './resources/tempOutput.png';
-
-    textUp = textUp ? textUp.toUpperCase() : null;
-    textDown = textDown ? textDown.toUpperCase() : null;
 
     fs.writeFileSync(inputImagePath, imageData, 'base64');
 
@@ -75,8 +72,8 @@ async function addTextToImage(imageData, textUp, textDown) {
         return imageData;
     }
 
-    const attributes = { fill: 'white', stroke: 'black',  'stroke-width': 2};
-    const options = { x: 0, y: 0, fontSize: 75, anchor: 'top', attributes: attributes };
+    const attributes = { fill: 'white', stroke: 'black', 'stroke-width': 2 };
+    const options = { x: 0, y: 0, fontSize: 70, anchor: 'top', attributes: attributes };
 
     const svgUp = textUp ? textToSVG.getSVG(textUp, options) : null;
     const svgDown = textDown ? textToSVG.getSVG(textDown, options) : null;
@@ -85,22 +82,26 @@ async function addTextToImage(imageData, textUp, textDown) {
     const sizeSvgDown = textDown ? textToSVG.getMetrics(textDown, options) : null;
 
     const widthHeight = Math.max(sizeSvgUp?.width || 0, sizeSvgDown?.width || 0) + 50;
-    const size = Math.round(widthHeight);
+    const size = Math.round(widthHeight) > 512 ? 512 : Math.round(widthHeight);
+
+    const compositeObjects = [];
+    if (svgUp) {
+        compositeObjects.push({ input: Buffer.from(svgUp), gravity: 'north' });
+    }
+    if (svgDown) {
+        compositeObjects.push({ input: Buffer.from(svgDown), gravity: 'south' });
+    }
 
     await sharp(inputImagePath)
-        .resize({ width: size, height: size })
+        .resize({
+            width: size,
+            height: size,
+            fit: (crop ? null : sharp.fit.fill),
+            position: sharp.strategy.entropy
+        })
         .toBuffer()
         .then(buffer => {
-            let sharpObject = sharp(buffer);
-
-            if (svgUp) {
-                sharpObject = sharpObject.composite([{ input: Buffer.from(svgUp), gravity: 'north' }]);
-            }
-            if (svgDown) {
-                sharpObject = sharpObject.composite([{ input: Buffer.from(svgDown), gravity: 'south' }]);
-            }
-
-            return sharpObject.toFile(outputImagePath);
+            return sharp(buffer).composite(compositeObjects).toFile(outputImagePath);
         })
         .then(() => {
             console.log('Imagem com texto adicionado criada com sucesso!');
@@ -112,6 +113,7 @@ async function addTextToImage(imageData, textUp, textDown) {
     const outputImage = fs.readFileSync(outputImagePath);
     return outputImage.toString('base64');
 }
+
 
 
 async function resizeVideo(inputFile, force, originalAR) {
@@ -199,13 +201,13 @@ async function handleStickerGeneration(msg, sender) {
 async function handleImageStickerGeneration(msg, sender, resizeWidth, crop, textUp, textDown) {
     let { data } = await msg.downloadMedia();
     if (textDown || textUp) {
-        data = await addTextToImage(data, textUp, textDown);
-    } 
+        data = await addTextToImage(data, textUp, textDown, crop);
+    }
     const resizedImageData = await resizeImage(data, resizeWidth, crop);
     await sendMediaSticker(sender, MediaType.Image, resizedImageData);
     await msg.reply("Sticker gerado com sucesso 😎");
     msg.react("✅");
-    try{
+    try {
         fs.unlinkSync('./resources/tempInput.png');
         fs.unlinkSync('./resources/tempOutput.png');
     } catch {
