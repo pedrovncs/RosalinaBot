@@ -1,10 +1,10 @@
-const { generateSticker } = require("../utils")
+const { handleStickerGeneration } = require("../utils")
 
 async function handleStickerCommand(sender,client, msg){
     try {
-        await generateSticker(msg, sender)
+        await handleStickerGeneration(msg, sender)
     } catch (e) {
-        console.error(e, JSON.stringify(msg, null, 4))
+        console.error(`Erro ao gerar Sticker: ${e.message}`)
         msg.reply("❌ Erro ao gerar Sticker!")
         msg.react("❌")
     }

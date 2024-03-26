@@ -1,25 +1,30 @@
-❔Comandos da Rosalina  *𝐁𝐄𝐓𝐀 𝘷𝘦𝘳𝘴𝘪𝘰𝘯*
+❔Comandos da Rosalina  *𝐁𝐄𝐓𝐀 𝘷𝘦𝘳𝘴𝘪𝘰𝘯* v1.5.0
 
-🤳 Envie uma Foto/GIF/Vídeo com a legenda "/figurinha" para gerar uma figurinha.
+🤳 Envie uma Foto / GIF / Vídeo com a legenda "/figurinha" para gerar uma figurinha.
             
 🔗 Envie "/figurinha" seguido do URL da imagem para gerar uma figurinha.
     ℹ Apenas imagens são suportadas.
     ℹ Imagens em .png funcionam neste método.
-            
-🔀 Envie uma figurinha para revertê-la automaticamente para uma imagem.
-    ℹ Não funciona muito bem com figurinhas animadas.
-    
+               
 🤑 Envie "/esmola" para receber as chaves do pix da Rosalina e ajudar a manter ela respirando por aparelhos.
 
 📝 Agradeça a Rosalina marcando ela e dizendo palavras bonitas (ou não).
 
-📌Parâmetros Opcionais
+📌Parâmetros Opcionais 
+    Os parâmetros abaixo podem ser usados juntos do comando _/figurinha_ para customizar a figurinha.
+
 📷 - funciona com imagens.
 🎥 - funciona com vídeos.
-    ℹ "/figurinha -alto" para resolução máxima. 📷
-    ℹ "/figurinha -baixo" para uma resolução cagada. 📷
-    ℹ "/figurinha -crop" para usar o crop no redimensionamento. 📷
-    ℹ "/figurinha -original" para usar a imagem ou vídeo no tamanho original 📷 🎥 
-    ℹ "/figurinha -force" para forçar o dobro de duração do sticker (14s). 🎥 ⚠ₑₓₚₑᵣᵢₘₑₙₜₐₗ
 
-👨‍💻 Meu código está em https://github.com/pedrovncs/RosalinaBot, abre uns pull request lá pô, mimajude
+    ℹ *-alto* para resolução máxima. 📷
+    ℹ *-baixo* para uma resolução cagada. 📷
+    ℹ *-crop* para usar o crop no redimensionamento. 📷
+    ℹ *-original* para usar a imagem ou vídeo no tamanho original 📷 🎥 
+    ℹ *-force* para forçar o dobro de duração do sticker (14s). 🎥 ⚠ₑₓₚₑᵣᵢₘₑₙₜₐₗ
+    ℹ *-texto1* _seu texto_; para adicionar um texto na parte superior do sticker. 📷
+    ℹ *-texto2* _seu texto_;  para adicionar um texto na parte inferior do sticker. 📷
+    (os textos devem terminar com " ; " para separar dos demais comandos)
+
+    *_exemplo:_* /figurinha -alto -texto2 olá mundo;
+
+👨‍💻 Meu código está em https://github.com/pedrovncs/RosalinaBot, abre uns pull request lá pô, mimajudee 🥺.

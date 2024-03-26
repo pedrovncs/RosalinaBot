@@ -1,0 +1,15 @@
+v1.5.0
+commit: 
+
+#ADD
++addTextToImage
++text-to-svg
++2 parametros adicionais
++alteracoes no menu ajuda.
+
+opcao texto nos stickers atraves da biblioteca text-to-svg + sharp;
+
+#REMOVED
+-handleSticker.js;
+-
+

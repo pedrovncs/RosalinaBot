@@ -9,6 +9,8 @@ const { Commands } = require('./constants');
 const { STICKER_COMMAND } = Commands;
 const { MediaType } = require('./constants');
 const ffmpeg = require('fluent-ffmpeg');
+const TextToSVG = require('text-to-svg');
+const textToSVG = TextToSVG.loadSync('./resources/impact.ttf');
 let defaultClient = null;
 
 async function cleanUp(client, cleanTime) {
@@ -60,10 +62,132 @@ async function resizeImage(imageData, resizeWidth, crop) {
     }
 }
 
+async function addTextToImage(imageData, textUp, textDown) {
+    const inputImagePath = './resources/tempInput.png';
+    const outputImagePath = './resources/tempOutput.png';
 
-async function generateSticker(msg, sender) {
+    textUp = textUp ? textUp.toUpperCase() : null;
+    textDown = textDown ? textDown.toUpperCase() : null;
+
+    fs.writeFileSync(inputImagePath, imageData, 'base64');
+
+    if (!textUp && !textDown) {
+        return imageData;
+    }
+
+    const attributes = { fill: 'white', stroke: 'black',  'stroke-width': 2};
+    const options = { x: 0, y: 0, fontSize: 75, anchor: 'top', attributes: attributes };
+
+    const svgUp = textUp ? textToSVG.getSVG(textUp, options) : null;
+    const svgDown = textDown ? textToSVG.getSVG(textDown, options) : null;
+
+    const sizeSvgUp = textUp ? textToSVG.getMetrics(textUp, options) : null;
+    const sizeSvgDown = textDown ? textToSVG.getMetrics(textDown, options) : null;
+
+    const widthHeight = Math.max(sizeSvgUp?.width || 0, sizeSvgDown?.width || 0) + 50;
+    const size = Math.round(widthHeight);
+
+    await sharp(inputImagePath)
+        .resize({ width: size, height: size })
+        .toBuffer()
+        .then(buffer => {
+            let sharpObject = sharp(buffer);
+
+            if (svgUp) {
+                sharpObject = sharpObject.composite([{ input: Buffer.from(svgUp), gravity: 'north' }]);
+            }
+            if (svgDown) {
+                sharpObject = sharpObject.composite([{ input: Buffer.from(svgDown), gravity: 'south' }]);
+            }
+
+            return sharpObject.toFile(outputImagePath);
+        })
+        .then(() => {
+            console.log('Imagem com texto adicionado criada com sucesso!');
+        })
+        .catch(err => {
+            console.error('Ocorreu um erro ao adicionar texto à imagem:', err);
+        });
+
+    const outputImage = fs.readFileSync(outputImagePath);
+    return outputImage.toString('base64');
+}
+
+
+async function resizeVideo(inputFile, force, originalAR) {
+    let outputFile = `./resources/outputs/tempOutput.mp4`;
+    const outputOptions = [
+        '-movflags',
+        'frag_keyframe+empty_moov',
+        '-preset ultrafast',
+    ];
+
+    if (originalAR && !force) {
+        null;
+    } else if (originalAR && force) {
+        outputOptions.push('-vf', 'setpts=0.4*PTS', '-r', '10');
+    } else if (force) {
+        outputOptions.push('-vf', 'scale=512:512,setpts=0.4*PTS', '-r', '10');
+    } else {
+        outputOptions.push('-vf', 'scale=512:512');
+    }
+
+    await new Promise((resolve, reject) => {
+        ffmpeg(inputFile)
+            .videoCodec('libx265')
+            .addOutputOptions(outputOptions)
+            .on('error', (err) => {
+                reject('Erro ao redimensionar o vídeo:', err);
+            })
+            .on('end', () => {
+                resolve();
+            })
+            .save(outputFile);
+    });
+
+    return outputFile;
+}
+
+async function handleStickerGeneration(msg, sender) {
     try {
-        await handleStickerGeneration(msg, sender);
+        await msg.reply("Transformando ⏳ ...");
+        await msg.react("⏳");
+
+        const commandParts = msg.body.split(" ");
+        const stickerSizeCommandIndex = commandParts.indexOf(STICKER_COMMAND);
+        const resizeWidth = getSizeFromCommand(commandParts, stickerSizeCommandIndex);
+        const crop = commandParts.includes('-crop');
+        const force = commandParts.includes('-force');
+        const originalAR = commandParts.includes('-original');
+
+        let textUp = null;
+        let textDown = null;
+
+        const textMatch = msg.body.match(/-texto1\s(.*?)(;|$)/s);
+        const textMatch2 = msg.body.match(/-texto2\s(.*?)(;|$)/s);
+
+        if (textMatch) {
+            textUp = textMatch[1].trim().toUpperCase();
+        }
+
+        if (textMatch2) {
+            textDown = textMatch2[1].trim().toUpperCase();
+        }
+
+        switch (msg.type) {
+            case "image":
+                await handleImageStickerGeneration(msg, sender, resizeWidth, crop, textUp, textDown);
+                break;
+            case "video":
+                await handleVideoStickerGeneration(msg, sender, force, originalAR);
+                break;
+            case "chat":
+                await handleChatStickerGeneration(msg, sender, resizeWidth);
+                break;
+            default:
+                msg.reply("❌ Erro, tipo de mídia não suportado!");
+                msg.react("❌");
+        }
     } catch (error) {
         console.error('Error generating sticker:', error.message);
         await msg.reply("❌ Erro ao gerar Sticker!");
@@ -71,40 +195,24 @@ async function generateSticker(msg, sender) {
     }
 }
 
-async function handleStickerGeneration(msg, sender) {
-    await msg.reply("Transformando ⏳ ...");
-    await msg.react("⏳");
-    const commandParts = msg.body.split(" ");
-    const stickerSizeCommandIndex = commandParts.indexOf(STICKER_COMMAND);
-    const resizeWidth = getSizeFromCommand(commandParts, stickerSizeCommandIndex);
 
-    const crop = commandParts.includes('-crop');
-    const force = commandParts.includes('-force');
-    const originalAR = commandParts.includes('-original');
-
-    switch (msg.type) {
-        case "image":
-            await handleImageStickerGeneration(msg, sender, resizeWidth, crop);
-            break;
-        case "video":
-            await handleVideoStickerGeneration(msg, sender, force, originalAR);
-            break;
-        case "chat":
-            await handleChatStickerGeneration(msg, sender, resizeWidth);
-            break;
-        default:
-            msg.reply("❌ Erro, tipo de mídia não suportado!");
-            msg.react("❌");
-    }
-}
-
-async function handleImageStickerGeneration(msg, sender, resizeWidth, crop) {
-    const { data } = await msg.downloadMedia();
+async function handleImageStickerGeneration(msg, sender, resizeWidth, crop, textUp, textDown) {
+    let { data } = await msg.downloadMedia();
+    if (textDown || textUp) {
+        data = await addTextToImage(data, textUp, textDown);
+    } 
     const resizedImageData = await resizeImage(data, resizeWidth, crop);
     await sendMediaSticker(sender, MediaType.Image, resizedImageData);
     await msg.reply("Sticker gerado com sucesso 😎");
     msg.react("✅");
+    try{
+        fs.unlinkSync('./resources/tempInput.png');
+        fs.unlinkSync('./resources/tempOutput.png');
+    } catch {
+        console.error('Erro ao remover arquivos temporários' + error.message);
+    }
 }
+
 
 async function handleVideoStickerGeneration(msg, sender, force, originalAR) {
     if (!fs.existsSync('./resources/outputs')) {
@@ -183,39 +291,6 @@ async function sendMediaStickerFromFile(msg, filePath) {
     await defaultClient.sendMessage(sender, media, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerPack: "Grifo's Gallery" });
 }
 
-async function resizeVideo(inputFile, force, originalAR) {
-    let outputFile = `./resources/outputs/tempOutput.mp4`;
-    const outputOptions = [
-        '-movflags',
-        'frag_keyframe+empty_moov',
-        '-preset ultrafast',
-    ];
-
-    if (originalAR && !force) {
-        null;
-    } else if (originalAR && force) {
-        outputOptions.push('-vf', 'setpts=0.4*PTS', '-r', '10');
-    } else if (force) {
-        outputOptions.push('-vf', 'scale=512:512,setpts=0.4*PTS', '-r', '10');
-    } else {
-        outputOptions.push('-vf', 'scale=512:512');
-    }
-
-    await new Promise((resolve, reject) => {
-        ffmpeg(inputFile)
-            .videoCodec('libx265')
-            .addOutputOptions(outputOptions)
-            .on('error', (err) => {
-                reject('Erro ao redimensionar o vídeo:', err);
-            })
-            .on('end', () => {
-                resolve();
-            })
-            .save(outputFile);
-    });
-
-    return outputFile;
-}
 
 async function sendMediaImage(sender, type, data) {
     const media = new MessageMedia(type.contentType, data, type.fileName);
@@ -258,9 +333,9 @@ module.exports = {
     sendMediaSticker,
     sendMediaImage,
     getSizeFromParam,
-    generateSticker,
     saveLastDeployTime,
     cleanUp,
     getDefaultChromePath,
     isClientMentioned,
+    handleStickerGeneration
 }

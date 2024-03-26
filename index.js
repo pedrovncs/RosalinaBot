@@ -7,7 +7,6 @@ const { Commands } = require('./constants');
 const handleEsmola = require('./commands/handleEsmola');
 const handleDeploy = require('./commands/handleDeploy');
 const handlePing = require('./commands/handlePing');
-const handleSticker = require('./commands/handleSticker');
 const handleStickerCommand = require('./commands/handleStickerCommand');
 const handleFeedback = require('./commands/handleFeedback');
 
@@ -28,7 +27,7 @@ client.on('qr', qr => {
 });
 
 client.on('ready', () => {
-    flagLimpo = cleanUp(client,cleanTime);
+    flagLimpo = cleanUp(client, cleanTime); 
     saveLastDeployTime(new Date());
     setTimeout(() => {
         client.sendMessage(adminIds[0], `-Novo deploy! 🚀 `);
@@ -38,24 +37,23 @@ client.on('ready', () => {
 
 client.on('message', async msg => {
     if (flagLimpo) {
-        console.log(`Mensagem recebida nao autorizada de: ${msg.from}`)
+        const lowerCaseBody = msg.body.toLowerCase(); 
+        console.log(`Mensagem recebida de: ${msg.from}, Autorizado: ${ allowedIds.includes(msg.from) || adminIds.includes(msg.from) }`)
         if (allowedIds.includes(msg.from) || allowedIds.length === 0 || adminIds.includes(msg.from)) {
             const sender = msg.from.startsWith(client.info.wid.user) ? msg.to : msg.from;
-            const mentions = await msg.getMentions();
-            console.log(`Mensagem recebida de ${sender}`)
-            if (msg.body.split(" ").toString().toLowerCase().includes(Commands.STICKER_COMMAND)) {
+            if (lowerCaseBody.split(" ").includes(Commands.STICKER_COMMAND)) {
                 handleStickerCommand(sender, client, msg);
-            } else if (msg.body === Commands.PING_COMMAND) {
+            } else if (lowerCaseBody === Commands.PING_COMMAND) {
                 handlePing(sender, client, msg);
-            } else if (msg.body === Commands.AJUDA_COMMAND) {
+            } else if (lowerCaseBody === Commands.AJUDA_COMMAND) {
                 handleAjuda(sender, client, msg);
-            } else if (msg.body === Commands.ESMOLA_COMMAND) {
+            } else if (lowerCaseBody === Commands.ESMOLA_COMMAND) {
                 handleEsmola(sender, client, msg);
-            } else if (msg.body === Commands.LAST_DEPLOY_COMMAND) {
+            } else if (lowerCaseBody === Commands.LAST_DEPLOY_COMMAND) {
                 handleDeploy(msg);
-            } else if (msg.type === 'sticker') {
-                handleSticker(sender, client, msg);
-            } 
+            } else if (lowerCaseBody.includes('rosalina')) {
+                handleFeedback(msg);
+            }
             else{
                 null
             }
