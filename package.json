@@ -20,7 +20,7 @@
     "sharp": "^0.32.6",
     "text-to-svg": "^3.1.5",
     "url-regex": "^5.0.0",
-    "whatsapp-web.js": "^1.22.2-alpha.1"
+    "whatsapp-web.js": "^1.23.0"
   },
   "devDependencies": {
     "typescript": "^5.2.2"

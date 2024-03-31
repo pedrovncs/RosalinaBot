@@ -1,5 +1,5 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
-const { cleanUp, saveLastDeployTime, getDefaultChromePath, isClientMentioned } = require('./utils');
+const { cleanUp, saveLastDeployTime, getDefaultChromePath, isClientMentioned, initClient } = require('./utils');
 const { handleAjuda } = require('./commands/handleAjuda');
 const qrcode = require('qrcode-terminal');
 const { allowedIds, adminIds } = require('./config');
@@ -20,6 +20,10 @@ const client = new Client({
     authStrategy: new LocalAuth(),
     ffmpegPath: ffmpegPath,
     puppeteer: puppeteerdata,
+    webVersionCache: {
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2410.1.html',
+   }
 });
 
 client.on('qr', qr => {
@@ -27,7 +31,9 @@ client.on('qr', qr => {
 });
 
 client.on('ready', () => {
+    initClient(client);
     flagLimpo = cleanUp(client, cleanTime); 
+    flagLimpo = true;
     saveLastDeployTime(new Date());
     setTimeout(() => {
         client.sendMessage(adminIds[0], `-Novo deploy! 🚀 `);

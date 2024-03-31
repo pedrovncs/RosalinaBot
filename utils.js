@@ -13,8 +13,11 @@ const TextToSVG = require('text-to-svg');
 const textToSVG = TextToSVG.loadSync('./resources/impact.ttf');
 let defaultClient = null;
 
-async function cleanUp(client, cleanTime) {
+function initClient(client) {
     defaultClient = client;
+}
+
+async function cleanUp(cleanTime) {
     await new Promise(resolve => setTimeout(resolve, cleanTime));
     for (const id of allowedIds) {
         const chat = await defaultClient.getChatById(id);
@@ -199,19 +202,30 @@ async function handleStickerGeneration(msg, sender) {
 
 
 async function handleImageStickerGeneration(msg, sender, resizeWidth, crop, textUp, textDown) {
-    let { data } = await msg.downloadMedia();
-    if (textDown || textUp) {
-        data = await addTextToImage(data, textUp, textDown, crop);
-    }
-    const resizedImageData = await resizeImage(data, resizeWidth, crop);
-    await sendMediaSticker(sender, MediaType.Image, resizedImageData);
-    await msg.reply("Sticker gerado com sucesso 😎");
-    msg.react("✅");
     try {
-        fs.unlinkSync('./resources/tempInput.png');
-        fs.unlinkSync('./resources/tempOutput.png');
-    } catch {
-        console.error('Erro ao remover arquivos temporários' + error.message);
+        let { data } = await msg.downloadMedia();
+        if (textDown || textUp) {
+            data = await addTextToImage(data, textUp, textDown, crop);
+        }
+        const resizedImageData = await resizeImage(data, resizeWidth, crop);
+        await sendMediaSticker(sender, MediaType.Image, resizedImageData);
+        await msg.reply("Sticker gerado com sucesso 😎");
+        msg.react("✅");
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error generating sticker:', error.message);
+            await msg.reply("❌ Erro ao gerar Sticker!");
+            msg.react("❌");
+        } else {
+            console.error('Erro inesperado ao gerar sticker:', error);
+        }
+    } finally {
+        try {
+            fs.unlinkSync('./resources/tempInput.png');
+            fs.unlinkSync('./resources/tempOutput.png');
+        } catch (error) {
+            console.error('Erro ao remover arquivos temporários:', error.message);
+        }
     }
 }
 
@@ -339,5 +353,6 @@ module.exports = {
     cleanUp,
     getDefaultChromePath,
     isClientMentioned,
-    handleStickerGeneration
+    handleStickerGeneration,
+    initClient
 }
