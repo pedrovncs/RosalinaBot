@@ -1,12 +1,8 @@
-v1.6.0
+v1.6.1
 
 
 #ADD
-command to /addgroup with admin authentication
-command to /ajudaadmin with admin authentication
-created hendleAdmin with most of the admins commands
-created adminAjuda.txt with the admin helpers
-created initClient() to separate client from cleanUp()
+add form link contact
 
 
 #REMOVED
