@@ -27,4 +27,7 @@
 
     *_exemplo:_* /figurinha -alto -texto2 olá mundo;
 
+⭐ Envie sua sugestão ou reporte de bugs no link 
+    https://forms.gle/tisRQ64bQGecwFWSA 
+
 👨‍💻 Meu código está em https://github.com/pedrovncs/RosalinaBot, abre uns pull request lá pô, mimajudee 🥺.
