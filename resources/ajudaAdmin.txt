@@ -1,0 +1,58 @@
+🔐 Comandos de Administração - Ajuda 🔐
+
+Função implementada: ✅
+Implementação em andamento: 🚧
+
+📋 Comandos:
+
+👥 /addgroup - Adiciona um grupo à lista de autorizados. ✅
+  ℹ️ Use este comando quando o bot estiver em um grupo.
+  ℹ️ O grupo será automaticamente adicionado à lista de autorizados.
+
+👤 /adduser [ID] - Adiciona um usuário à lista de autorizados. ✅
+  ℹ️ O número do usuário junto do código do país e DDD devem ser fornecidos como argumento.
+  ℹ️ O usuário será automaticamente adicionado à lista de autorizados.
+
+👤 /addadmin [ID] - Adiciona um administrador à lista de administradores.
+  ℹ️ O número do usuário junto do código do país e DDD devem ser fornecidos como argumento.
+  ℹ️ O administrador será automaticamente adicionado à lista de administradores.
+
+📋 Listagem:
+
+📝 /listallowed - Lista todos os grupos autorizados. 🚧
+  ℹ️ Este comando lista todos os grupos atualmente autorizados.
+
+👤 /listadmins - Lista todos os administradores. 🚧
+  ℹ️ Este comando lista todos os administradores atuais.
+
+📋 Remoção:
+
+🚫 /removegroup [ID] - Remove um grupo da lista de autorizados. 🚧
+  ℹ️ O ID do grupo deve ser fornecido como argumento.
+  ℹ️ O grupo será automaticamente removido da lista de autorizados.
+
+🚫 /removeuser [ID] - Remove um usuário da lista de autorizados. 🚧
+  ℹ️ O número do usuário junto do código do país e DDD devem ser fornecidos como argumento.
+  ℹ️ O usuário será automaticamente removido da lista de autorizados.
+
+🚫 /removeadmin [ID] - Remove um administrador da lista de administradores. 🚧
+  ℹ️ O número do usuário junto do código do país e DDD devem ser fornecidos como argumento.
+  ℹ️ O administrador será automaticamente removido da lista de administradores.
+
+💬 Palavras :
+
+📝 /addbadwords [palavra1; palavra2; ...] - Adiciona palavras à lista de palavras proibidas.
+  ℹ️ As palavras devem ser fornecidas separadas por ponto e vírgula.
+  ℹ️ As palavras serão automaticamente adicionadas à lista de palavras proibidas.
+
+📝 /addgoodwords [palavra1; palavra2; ...] - Adiciona palavras à lista de palavras permitidas.
+  ℹ️ As palavras devem ser fornecidas separadas por ponto e vírgula.
+  ℹ️ As palavras serão automaticamente adicionadas à lista de palavras permitidas.
+
+🤫 /removebadwords [palavra1; palavra2; ...] - Remove palavras da lista de palavras proibidas.
+  ℹ️ As palavras devem ser fornecidas separadas por ponto e vírgula.
+  ℹ️ As palavras serão automaticamente removidas da lista de palavras proibidas.
+
+🤫 /removegoodwords [palavra1; palavra2; ...] - Remove palavras da lista de palavras permitidas.
+  ℹ️ As palavras devem ser fornecidas separadas por ponto e vírgula.
+  ℹ️ As palavras serão automaticamente removidas da lista de palavras permitidas.

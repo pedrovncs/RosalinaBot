@@ -7,7 +7,7 @@ const { Commands } = require('./constants');
 const handleEsmola = require('./commands/handleEsmola');
 const handleDeploy = require('./commands/handleDeploy');
 const handlePing = require('./commands/handlePing');
-const { addGroup } = require('./commands/handleAdmin');
+const { addGroup, handleAjudaAdmin } = require('./commands/handleAdmin');
 const handleStickerCommand = require('./commands/handleStickerCommand');
 const handleFeedback = require('./commands/handleFeedback');
 
@@ -33,7 +33,7 @@ client.on('qr', qr => {
 
 client.on('ready', () => {
     initClient(client);
-    flagLimpo = cleanUp(client, cleanTime); 
+    flagLimpo = cleanUp(cleanTime); 
     flagLimpo = true;
     saveLastDeployTime(new Date());
     setTimeout(() => {
@@ -60,7 +60,10 @@ client.on('message', async msg => {
                 handleDeploy(msg);
             }else if(lowerCaseBody.includes('/addgroup')){
                 addGroup(sender, client, msg);
-            } else if (lowerCaseBody.includes('rosalina')) {
+            } else if( lowerCaseBody.includes('/ajudaadmin')){
+                handleAjudaAdmin(sender, client, msg);
+            }
+            else if (lowerCaseBody.includes('rosalina')) {
                 handleFeedback(msg);
             }
             else{

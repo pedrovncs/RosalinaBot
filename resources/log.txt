@@ -1,15 +1,14 @@
-v1.5.0
-commit: 
+v1.6.0
+
 
 #ADD
-+addTextToImage
-+text-to-svg
-+2 parametros adicionais
-+alteracoes no menu ajuda.
+command to /addgroup with admin authentication
+command to /ajudaadmin with admin authentication
+created hendleAdmin with most of the admins commands
+created adminAjuda.txt with the admin helpers
+created initClient() to separate client from cleanUp()
 
-opcao texto nos stickers atraves da biblioteca text-to-svg + sharp;
 
 #REMOVED
--handleSticker.js;
--
+
 
