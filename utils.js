@@ -84,8 +84,9 @@ async function addTextToImage(imageData, textUp, textDown, crop) {
     const sizeSvgUp = textUp ? textToSVG.getMetrics(textUp, options) : null;
     const sizeSvgDown = textDown ? textToSVG.getMetrics(textDown, options) : null;
 
-    const widthHeight = Math.max(sizeSvgUp?.width || 0, sizeSvgDown?.width || 0) + 50;
-    const size = Math.round(widthHeight) > 512 ? 512 : Math.round(widthHeight);
+    let widthHeight = Math.max(sizeSvgUp?.width || 0, sizeSvgDown?.width || 0) + 50;
+    widthHeight = Math.floor(widthHeight) < 512 ? 512 : Math.floor(widthHeight);
+    console.log('Width/Height:', widthHeight);
 
     const compositeObjects = [];
     if (svgUp) {
@@ -97,8 +98,8 @@ async function addTextToImage(imageData, textUp, textDown, crop) {
 
     await sharp(inputImagePath)
         .resize({
-            width: size,
-            height: size,
+            width: widthHeight,
+            height: widthHeight,
             fit: (crop ? null : sharp.fit.fill),
             position: sharp.strategy.entropy
         })

@@ -7,6 +7,7 @@ const { Commands } = require('./constants');
 const handleEsmola = require('./commands/handleEsmola');
 const handleDeploy = require('./commands/handleDeploy');
 const handlePing = require('./commands/handlePing');
+const { addGroup } = require('./commands/handleAdmin');
 const handleStickerCommand = require('./commands/handleStickerCommand');
 const handleFeedback = require('./commands/handleFeedback');
 
@@ -45,7 +46,7 @@ client.on('message', async msg => {
     if (flagLimpo) {
         const lowerCaseBody = msg.body.toLowerCase(); 
         console.log(`Mensagem recebida de: ${msg.from}, Autorizado: ${ allowedIds.includes(msg.from) || adminIds.includes(msg.from) }`)
-        if (allowedIds.includes(msg.from) || allowedIds.length === 0 || adminIds.includes(msg.from)) {
+        if (allowedIds.includes(msg.from) || allowedIds.length === 0 || adminIds.includes(msg.from) || adminIds.includes(msg.author)) {
             const sender = msg.from.startsWith(client.info.wid.user) ? msg.to : msg.from;
             if (lowerCaseBody.split(" ").includes(Commands.STICKER_COMMAND)) {
                 handleStickerCommand(sender, client, msg);
@@ -57,6 +58,8 @@ client.on('message', async msg => {
                 handleEsmola(sender, client, msg);
             } else if (lowerCaseBody === Commands.LAST_DEPLOY_COMMAND) {
                 handleDeploy(msg);
+            }else if(lowerCaseBody.includes('/addgroup')){
+                addGroup(sender, client, msg);
             } else if (lowerCaseBody.includes('rosalina')) {
                 handleFeedback(msg);
             }
