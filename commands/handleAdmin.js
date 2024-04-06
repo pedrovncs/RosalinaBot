@@ -246,11 +246,18 @@ const listGoodWords = (msg) => {
 }
 
 const handleAjudaAdmin = (sender, client,msg) => {
+    if (!adminIds.includes(sender)) {
+        msg.react('❌');
+        msg.reply(`❌ Você não tem permissão para acessar este comando!`);
+        return;
+    }
     const ajudaAdminTextPath = './resources/ajudaAdmin.txt';
     const ajudaAdminText = fs.readFileSync(ajudaAdminTextPath, 'utf8');
     msg.react('🤔');
     client.sendMessage(sender, ajudaAdminText);
 }
+
+
 
 
 
