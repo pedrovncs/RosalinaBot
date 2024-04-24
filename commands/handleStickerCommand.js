@@ -1,4 +1,4 @@
-const { handleStickerGeneration } = require("../utils")
+const { handleStickerGeneration } = require("../utils/utils")
 
 async function handleStickerCommand(sender,client, msg){
     try {

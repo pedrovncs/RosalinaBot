@@ -2,12 +2,11 @@ const axios = require('axios');
 const sharp = require('sharp');
 const fs = require('fs');
 const { MessageMedia } = require('whatsapp-web.js');
-const config = require('./config.js');
+const config = require('../config.js');
 const { allowedIds } = config;
 const urlRegex = require('url-regex');
-const { Commands } = require('./constants');
+const { Commands, MediaType } = require('../constants.js');
 const { STICKER_COMMAND } = Commands;
-const { MediaType } = require('./constants');
 const ffmpeg = require('fluent-ffmpeg');
 const TextToSVG = require('text-to-svg');
 const textToSVG = TextToSVG.loadSync('./resources/impact.ttf');
@@ -329,7 +328,7 @@ function getSizeFromParam(param) {
 
 function saveLastDeployTime(lastDeployTime) {
     try {
-        const configPath = './config.js';
+        const configPath = '../config.js';
         let config = require(configPath);
 
         config.lastDeployTime = lastDeployTime.toISOString();

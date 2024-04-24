@@ -1,5 +1,5 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
-const { cleanUp, saveLastDeployTime, getDefaultChromePath, isClientMentioned, initClient } = require('./utils');
+const { cleanUp, saveLastDeployTime, getDefaultChromePath, isClientMentioned, initClient } = require('./utils/utils');
 const { handleAjuda } = require('./commands/handleAjuda');
 const qrcode = require('qrcode-terminal');
 const { allowedIds, adminIds } = require('./config');
@@ -9,11 +9,11 @@ const handleDeploy = require('./commands/handleDeploy');
 const handlePing = require('./commands/handlePing');
 const { addGroup, handleAjudaAdmin } = require('./commands/handleAdmin');
 const handleStickerCommand = require('./commands/handleStickerCommand');
-const { handleAnswer, handleCompliment } = require('./commands/handleFeedback');
+const { handleAnswer, handleCompliment, handleFeedback } = require('./commands/handleFeedback');
 const {handleDevkit} = require('./commands/handleDevkit');
 
 let flagLimpo = false;
-const cleanTime = 5000;
+const cleanTime = 8000;
 
 const puppeteerdata = getDefaultChromePath() ? { executablePath: getDefaultChromePath(), args: ['--no-sandbox,'] } : {};
 const ffmpegPath = require('ffmpeg-static');
@@ -44,8 +44,8 @@ client.on('ready', () => {
 });
 
 client.on('message', async msg => {
+    const lowerCaseBody = msg.body.toLowerCase(); 
     if (flagLimpo) {
-        const lowerCaseBody = msg.body.toLowerCase(); 
         console.log(`Mensagem recebida de: ${msg.from}, Autorizado: ${ allowedIds.includes(msg.from) || adminIds.includes(msg.from) }`)
         if (allowedIds.includes(msg.from) || allowedIds.length === 0 || adminIds.includes(msg.from) || adminIds.includes(msg.author)) {
             const sender = msg.from.startsWith(client.info.wid.user) ? msg.to : msg.from;
@@ -59,20 +59,15 @@ client.on('message', async msg => {
                 handleEsmola(sender, client, msg);
             } else if (lowerCaseBody === Commands.LAST_DEPLOY_COMMAND) {
                 handleDeploy(msg);
-            }else if (lowerCaseBody.includes('/templates')){
+            }else if (lowerCaseBody === Commands.TEMPLATE_COMMAND) {
                 handleDevkit(sender, client, msg);
             } else if(lowerCaseBody.includes('/addgroup')){
                 addGroup(sender, client, msg);
-            } else if( lowerCaseBody.includes('/ajudaadmin')){
+            } else if( lowerCaseBody == Commands.HELP_ADMIN_COMMAND){
                 handleAjudaAdmin(sender, client, msg);
             }
             else if (lowerCaseBody.includes('rosalina')) {
-                if (lowerCaseBody.includes("?")){
-                    handleAnswer(client,msg);
-                } else {
-                    handleCompliment(msg);
-                }
-                
+                handleFeedback(msg); 
             }
             else{
                 null

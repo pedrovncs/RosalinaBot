@@ -1,9 +1,9 @@
-v1.6.3
+v1.6.4
 
 
 #ADD
-fixed rare logical
-add devkit command to people make answers
+adjusted logical errors 
+movem utils to a folder
 
 
 #REMOVED

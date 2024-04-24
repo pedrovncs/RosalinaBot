@@ -1,4 +1,4 @@
-❔Comandos da Rosalina  *𝐁𝐄𝐓𝐀* v1.6.3
+❔Comandos da Rosalina  *𝐁𝐄𝐓𝐀* v1.6.4
 
 🤳 Envie uma Foto / GIF / Vídeo com a legenda "/figurinha" para gerar uma figurinha.
             
@@ -10,7 +10,7 @@
 
 📝 Agradeça a Rosalina marcando ela e dizendo palavras bonitas (ou não).
 
-⁉ Você pode fazer perguntas para Rosalina, ao usar o nome dela em qualquer sentença que termine com _?_.
+⁉ Você pode fazer perguntas para Rosalina, ao usar o nome dela em qualquer sentença que termine com _?_
     ℹ Você pode enviar sugestões de respostas através do formulário.
     ℹ O comando /templates pode ser usado para ter acesso ao kit de desenvolvimento de novas respostas.
 
