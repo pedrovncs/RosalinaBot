@@ -1,4 +1,4 @@
-🔐 Comandos de Administração - Ajuda 🔐
+🔐 Comandos de Administração 🔐
 
 Função implementada: ✅
 Implementação em andamento: 🚧

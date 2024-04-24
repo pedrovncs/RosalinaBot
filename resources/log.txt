@@ -1,10 +1,11 @@
-v1.6.1
+v1.6.2
 
 
 #ADD
-add form link contact
+add ask and answer
+add new lines on ajuda.txt
 
 
 #REMOVED
-
+handlefeedback function is now separated 
 

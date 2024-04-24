@@ -6,7 +6,7 @@ async function handleEsmola(sender,client, msg) {
         const mediaPix = MessageMedia.fromFilePath('./resources/pix-code.png');
         msg.react("🤑");
         await msg.reply("mim da uns trocado ai, to passando necessidade aws ta caro 😭");
-        await client.sendMessage(sender, mediaPix, { sendMediaAsSticker: true });
+        await client.sendMessage(sender, mediaPix, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerPack: "Grifo's Gallery"});
         await client.sendMessage(sender, "🔑 Outras chaves: ");
         await client.sendMessage(sender, "☎️Telefone: 21959019162");
         await client.sendMessage(sender, "📧Email: rosalina.esmola@gmail.com");

@@ -9,7 +9,7 @@ const handleDeploy = require('./commands/handleDeploy');
 const handlePing = require('./commands/handlePing');
 const { addGroup, handleAjudaAdmin } = require('./commands/handleAdmin');
 const handleStickerCommand = require('./commands/handleStickerCommand');
-const handleFeedback = require('./commands/handleFeedback');
+const { handleAnswer, handleCompliment } = require('./commands/handleFeedback');
 
 let flagLimpo = false;
 const cleanTime = 5000;
@@ -64,7 +64,12 @@ client.on('message', async msg => {
                 handleAjudaAdmin(sender, client, msg);
             }
             else if (lowerCaseBody.includes('rosalina')) {
-                handleFeedback(msg);
+                if (lowerCaseBody.includes("?")){
+                    handleAnswer(client,msg);
+                } else {
+                    handleCompliment(msg);
+                }
+                
             }
             else{
                 null
