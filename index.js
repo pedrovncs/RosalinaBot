@@ -10,6 +10,7 @@ const handlePing = require('./commands/handlePing');
 const { addGroup, handleAjudaAdmin } = require('./commands/handleAdmin');
 const handleStickerCommand = require('./commands/handleStickerCommand');
 const { handleAnswer, handleCompliment } = require('./commands/handleFeedback');
+const {handleDevkit} = require('./commands/handleDevkit');
 
 let flagLimpo = false;
 const cleanTime = 5000;
@@ -58,7 +59,9 @@ client.on('message', async msg => {
                 handleEsmola(sender, client, msg);
             } else if (lowerCaseBody === Commands.LAST_DEPLOY_COMMAND) {
                 handleDeploy(msg);
-            }else if(lowerCaseBody.includes('/addgroup')){
+            }else if (lowerCaseBody.includes('/templates')){
+                handleDevkit(sender, client, msg);
+            } else if(lowerCaseBody.includes('/addgroup')){
                 addGroup(sender, client, msg);
             } else if( lowerCaseBody.includes('/ajudaadmin')){
                 handleAjudaAdmin(sender, client, msg);

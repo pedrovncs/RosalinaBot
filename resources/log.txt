@@ -1,11 +1,11 @@
-v1.6.2
+v1.6.3
 
 
 #ADD
-add ask and answer
-add new lines on ajuda.txt
+fixed rare logical
+add devkit command to people make answers
 
 
 #REMOVED
-handlefeedback function is now separated 
+
 
