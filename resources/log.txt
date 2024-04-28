@@ -1,10 +1,10 @@
-v1.6.4
+v1.6.5
 
 
 #ADD
-adjusted logical errors 
-movem utils to a folder
-
+added handleInteraction
+fixed handleAdmin logic
+added text to video stickers (need fix on resize resolution)
 
 #REMOVED
 
