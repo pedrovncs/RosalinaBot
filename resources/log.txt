@@ -2,9 +2,7 @@ v1.6.5
 
 
 #ADD
-added handleInteraction
-fixed handleAdmin logic
-added text to video stickers (need fix on resize resolution)
+removed await from basic calls
 
 #REMOVED
 

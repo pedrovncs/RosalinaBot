@@ -131,24 +131,26 @@ const removeUser = (msg) => {
     } 
 
 const addBadWords = (msg) => {
-        const prefix = '/admin addbadwords ';
-        const message = msg.body.toLowerCase();
-        const words = message.slice(prefix.length).split(';').map(word => word.trim());
+    const prefix = '/admin addbadwords ';
+    let message = msg.body.toLowerCase().trim();
+    let words = message.slice(prefix.length).replace(/;$/, '').trim();
+    if (words) {
         const updatedConfig = { ...require('../config.js') };
-        updatedConfig.badWords = [...updatedConfig.badWords, ...words];
+        const wordsArray = words.split(';').map(word => word.trim());
+        updatedConfig.badWords = [...updatedConfig.badWords, ...wordsArray];
         fs.writeFileSync('./config.js', `module.exports = ${JSON.stringify(updatedConfig, null, 2)};`);
         msg.react('✅');
-        msg.reply(`✅ Palavras adicionadas com sucesso!`);
+        msg.reply(`✅ ${wordsArray.length} palavra(s) adicionada(s) com sucesso!`);
+    } else {
+        msg.react('❌');
+        msg.reply('❌ Nenhuma palavra válida foi fornecida.');
+    }
 }
 
 const addGoodWords = (msg) => {
     const prefix = '/admin addgoodwords ';
-    // Convert the message to lowercase and trim it
     let message = msg.body.toLowerCase().trim();
-    
-    // Remove the prefix and any trailing whitespace or semicolon
     let words = message.slice(prefix.length).replace(/;$/, '').trim();
-    
     if (words) {
         const updatedConfig = { ...require('../config.js') };
         const wordsArray = words.split(';').map(word => word.trim());
@@ -160,7 +162,7 @@ const addGoodWords = (msg) => {
         msg.react('❌');
         msg.reply('❌ Nenhuma palavra válida foi fornecida.');
     }
-};
+}
 
 const removeBadWords = (msg) => {
         const words = msg.body.split(' ').slice(1).join(' ').split(';').map(word => word.trim());
@@ -182,12 +184,12 @@ const removeGoodWords = (msg) => {
 
 const listBadWords = (msg) => {
         msg.react('✅');
-        msg.reply(`✅ Lista de palavras bloqueadas: ${require('../config.js').badWords.join(', \n')}`); 
+        msg.reply(`✅ Lista de palavras listadas como ofensas: ${require('../config.js').badWords.join(', \n')}`); 
 }
 
 const listGoodWords = (msg) => {
         msg.react('✅');
-        msg.reply(`✅ Lista de palavras permitidas: ${require('../config.js').goodWords.join(', \n')}`);
+        msg.reply(`✅ Lista de palavras listadas como elogio: ${require('../config.js').goodWords.join(', \n')}`);
     } 
 
 const handleAjudaAdmin = (msg) => {
