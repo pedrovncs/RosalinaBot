@@ -6,8 +6,7 @@ module.exports = {
         AJUDA_COMMAND: "/ajuda",
         PING_COMMAND: "/ping",
         TEMPLATE_COMMAND: "/templates",
-        HELP_ADMIN_COMMAND: "/ajudaAdmin",
-    
+        ADMIN_COMMAND: "/admin",
     },
     MediaType: {
         Image: { contentType: "image/jpeg", fileName: "image.jpg" },

@@ -7,16 +7,18 @@ const { Commands } = require('./constants');
 const handleEsmola = require('./commands/handleEsmola');
 const handleDeploy = require('./commands/handleDeploy');
 const handlePing = require('./commands/handlePing');
-const { addGroup, handleAjudaAdmin } = require('./commands/handleAdmin');
+const { handleAdmin } = require('./commands/handleAdmin');
 const handleStickerCommand = require('./commands/handleStickerCommand');
-const { handleAnswer, handleCompliment, handleFeedback } = require('./commands/handleFeedback');
+const { handleFeedback } = require('./commands/handleFeedback');
 const {handleDevkit} = require('./commands/handleDevkit');
+const handleInteraction= require('./commands/handleInteraction');
 
 let flagLimpo = false;
 const cleanTime = 8000;
 
 const puppeteerdata = getDefaultChromePath() ? { executablePath: getDefaultChromePath(), args: ['--no-sandbox,'] } : {};
 const ffmpegPath = require('ffmpeg-static');
+
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -35,7 +37,6 @@ client.on('qr', qr => {
 client.on('ready', () => {
     initClient(client);
     flagLimpo = cleanUp(cleanTime); 
-    flagLimpo = true;
     saveLastDeployTime(new Date());
     setTimeout(() => {
         client.sendMessage(adminIds[0], `-Novo deploy! 🚀 `);
@@ -49,6 +50,7 @@ client.on('message', async msg => {
         console.log(`Mensagem recebida de: ${msg.from}, Autorizado: ${ allowedIds.includes(msg.from) || adminIds.includes(msg.from) }`)
         if (allowedIds.includes(msg.from) || allowedIds.length === 0 || adminIds.includes(msg.from) || adminIds.includes(msg.author)) {
             const sender = msg.from.startsWith(client.info.wid.user) ? msg.to : msg.from;
+            handleInteraction(msg);
             if (lowerCaseBody.split(" ").includes(Commands.STICKER_COMMAND)) {
                 handleStickerCommand(sender, client, msg);
             } else if (lowerCaseBody === Commands.PING_COMMAND) {
@@ -61,14 +63,12 @@ client.on('message', async msg => {
                 handleDeploy(msg);
             }else if (lowerCaseBody === Commands.TEMPLATE_COMMAND) {
                 handleDevkit(sender, client, msg);
-            } else if(lowerCaseBody.includes('/addgroup')){
-                addGroup(sender, client, msg);
-            } else if( lowerCaseBody == Commands.HELP_ADMIN_COMMAND){
-                handleAjudaAdmin(sender, client, msg);
-            }
+            } else if(lowerCaseBody.includes(Commands.ADMIN_COMMAND)){
+                handleAdmin(msg, client);
+            } 
             else if (lowerCaseBody.includes('rosalina')) {
                 handleFeedback(msg); 
-            }
+            } 
             else{
                 null
             }

@@ -8,6 +8,7 @@ const urlRegex = require('url-regex');
 const { Commands, MediaType } = require('../constants.js');
 const { STICKER_COMMAND } = Commands;
 const ffmpeg = require('fluent-ffmpeg');
+const ffmpegStatic = require('ffmpeg-static');
 const TextToSVG = require('text-to-svg');
 const textToSVG = TextToSVG.loadSync('./resources/impact.ttf');
 let defaultClient = null;
@@ -64,6 +65,60 @@ async function resizeImage(imageData, resizeWidth, crop) {
     }
 }
 
+async function addTextToVideo(inputVideoPath, textUp, textDown) {
+    ffmpeg.setFfmpegPath(ffmpegStatic);
+    const command = ffmpeg(inputVideoPath)
+        .videoFilters([]);
+
+    const textOptions = {
+        fontfile: './resources/impact.ttf', 
+        fontsize: 28,
+        fontcolor: 'white',
+        shadowcolor: 'black',
+        shadowx: 3,
+        shadowy: 3
+    };
+
+    if (textUp) {
+        command.videoFilters({
+            filter: 'drawtext',
+            options: {
+                ...textOptions,
+                text: textUp,
+                x: '(w-text_w)/2', 
+                y: 10, 
+            }
+        });
+    }
+
+    if (textDown) {
+        command.videoFilters({
+            filter: 'drawtext',
+            options: {
+                ...textOptions,
+                text: textDown,
+                x: '(w-text_w)/2', 
+                y: 'h-text_h-10', 
+            }
+        });
+    }
+
+    return new Promise((resolve, reject) => {
+        command
+            .output('./resources/outputs/tempWithText.mp4')
+            .on('end', () => {
+                console.log('Processamento de vídeo concluído');
+                resolve();
+            })
+            .on('error', (err) => {
+                console.error('Erro ao processar vídeo:', err);
+                reject(err);
+            })
+            .run();
+    });
+}
+
+
 async function addTextToImage(imageData, textUp, textDown, crop) {
     const inputImagePath = './resources/tempInput.png';
     const outputImagePath = './resources/tempOutput.png';
@@ -116,8 +171,6 @@ async function addTextToImage(imageData, textUp, textDown, crop) {
     const outputImage = fs.readFileSync(outputImagePath);
     return outputImage.toString('base64');
 }
-
-
 
 async function resizeVideo(inputFile, force, originalAR) {
     let outputFile = `./resources/outputs/tempOutput.mp4`;
@@ -184,7 +237,7 @@ async function handleStickerGeneration(msg, sender) {
                 await handleImageStickerGeneration(msg, sender, resizeWidth, crop, textUp, textDown);
                 break;
             case "video":
-                await handleVideoStickerGeneration(msg, sender, force, originalAR);
+                await handleVideoStickerGeneration(msg, sender, force, originalAR, textUp, textDown);
                 break;
             case "chat":
                 await handleChatStickerGeneration(msg, sender, resizeWidth);
@@ -199,7 +252,6 @@ async function handleStickerGeneration(msg, sender) {
         msg.react("❌");
     }
 }
-
 
 async function handleImageStickerGeneration(msg, sender, resizeWidth, crop, textUp, textDown) {
     try {
@@ -229,19 +281,21 @@ async function handleImageStickerGeneration(msg, sender, resizeWidth, crop, text
     }
 }
 
-
-async function handleVideoStickerGeneration(msg, sender, force, originalAR) {
+async function handleVideoStickerGeneration(msg, sender, force, originalAR, textUp, textDown) {
     if (!fs.existsSync('./resources/outputs')) {
         fs.mkdirSync('./resources/outputs');
     } else {
         fs.rmSync('./resources/outputs', { recursive: true });
         fs.mkdirSync('./resources/outputs');
     }
-
     try {
         const temp = await msg.downloadMedia();
-        const tempPath = './resources/outputs/temp.mp4';
+        let tempPath = './resources/outputs/temp.mp4';
         fs.writeFileSync(tempPath, temp.data, 'base64');
+        if (textDown || textUp) {
+            data = await addTextToVideo(tempPath, textUp, textDown);
+            tempPath = './resources/outputs/tempWithText.mp4';
+        }
         const resizedData = await resizeVideo(tempPath, force, originalAR);
         await sendMediaStickerFromFile(msg, resizedData);
         await msg.reply("Sticker gerado com sucesso 😎");
@@ -254,7 +308,6 @@ async function handleVideoStickerGeneration(msg, sender, force, originalAR) {
         fs.rmSync('./resources/outputs', { recursive: true })
     }
 }
-
 
 async function handleChatStickerGeneration(msg, sender, resizeWidth) {
     const url = msg.body.split(" ").reduce((acc, elem) => acc ? acc : (urlRegex().test(elem) ? elem : false), false);

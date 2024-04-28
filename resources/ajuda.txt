@@ -1,4 +1,4 @@
-❔Comandos da Rosalina  *𝐁𝐄𝐓𝐀* v1.6.4
+❔Comandos da Rosalina  *𝐁𝐄𝐓𝐀* v1.6.5
 
 🤳 Envie uma Foto / GIF / Vídeo com a legenda "/figurinha" para gerar uma figurinha.
             
@@ -19,14 +19,15 @@
 
 📷 - funciona com imagens.
 🎥 - funciona com vídeos.
+📹 - funciona com vídeos em fase de testes.
 
     ℹ *-alto* para resolução máxima. 📷
     ℹ *-baixo* para uma resolução cagada. 📷
     ℹ *-crop* para usar o crop no redimensionamento. 📷
     ℹ *-original* para usar a imagem ou vídeo no tamanho original 📷 🎥 
     ℹ *-force* para forçar o dobro de duração do sticker (14s). 🎥 ⚠ₑₓₚₑᵣᵢₘₑₙₜₐₗ
-    ℹ *-texto1* _seu texto_; para adicionar um texto na parte superior do sticker. 📷
-    ℹ *-texto2* _seu texto_;  para adicionar um texto na parte inferior do sticker. 📷
+    ℹ *-texto1* _seu texto_; para adicionar um texto na parte superior do sticker. 📷📹
+    ℹ *-texto2* _seu texto_;  para adicionar um texto na parte inferior do sticker. 📷📹
     (os textos devem terminar com " ; " para separar dos demais comandos)
 
     *_exemplo:_* /figurinha -alto -texto2 olá mundo;
