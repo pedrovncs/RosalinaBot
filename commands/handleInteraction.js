@@ -9,13 +9,12 @@ const messageDictionary = {
     'nervoso': 'Calma, amigo',
     'calmar': 'indiferente amigo',
     'CAPS': 'Calmar, amigo, sem gritaria',
+    'rosalixo': ['e tua mãe é piranha', 'e tu é um frouxo', 'falou o viado', 'e teu pai dá o rabo', ], 
+    'calabreso': 'deus te perdoe por essa heresia',
 };
 
 async function handleInteraction(msg) {
     try {
-        if (await checkCaps(msg)) {
-            await handleMessage(msg, 'CAPS');
-        } else {
             const lowerCaseBody = msg.body.toLowerCase();
             for (const key in soundsDictionary) {
                 if (lowerCaseBody.includes(key)) {
@@ -27,8 +26,7 @@ async function handleInteraction(msg) {
                     await handleMessage(msg, key);
                 }
             }
-        }
-    } catch (error) {
+        } catch (error) {
         console.error('Erro ao lidar com a interação:', error);
     }
 }
@@ -46,23 +44,14 @@ async function handleSound(msg, key) {
 async function handleMessage(msg, key) {
     try {
         await msg.react("⁉");
-        await msg.reply(messageDictionary[key]);
+        let response = messageDictionary[key];
+        if (Array.isArray(response)) {
+            const randomIndex = Math.floor(Math.random() * response.length);
+            response = response[randomIndex];
+        }
+        await msg.reply(response);
     } catch (error) {
         console.error(`Erro ao lidar com a mensagem para a chave "${key}":`, error);
-    }
-}
-
-async function checkCaps(msg) {
-    try {
-        const message = msg.body.trim();
-        const capsPercentage = (message.match(/[A-Z]/g) || []).length / message.length;
-        if ((capsPercentage > 0.8) && (message.length > 16)) {
-            return true;
-        }
-        return false;
-    } catch (error) {
-        console.error('Erro ao verificar maiúsculas na mensagem:', error);
-        return false; 
     }
 }
 
