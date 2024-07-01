@@ -1,14 +1,28 @@
 const { MessageMedia } = require('whatsapp-web.js');
+const fs = require('fs');
+const path = require('path');
 
 const goodWords = require('../config').goodWords;
 const badWords = require('../config').badWords;
+const goodReactions = require('../config').goodReactions;
+const badReactions = require('../config').badReactions;
 
 
-const goodReactions = ["😄", "😃", "😀", "😍", "😊", "🥰", "😻", "💖", "❤️", "🌈", "🌟", "😁", "😎", "🤗", "👍"];
-const badReactions = ["😠", "😡", "😒", '👿', "💢", "😤", "😾", "🤬", "😣", "😖", "😑"];
+const rareStickersDir = './resources/Answers/rares';
+const answerStickersDir = './resources/Answers';
 
-const answerStickers = ["god_is_dead.png", "idk.png", "mayber.png", "nope.png", "nope.png", "yes.png", "yes.png", "you_know.png", "wtf.png", "sure.png", "no_answer.png", "omg.png"];
-const rareStickers = ["42.png", "brian_jonestown_massacre.png", "smell_it.png", "introvert.png", "morpheus.png"]
+let rareStickers = [];
+let answerStickers = [];
+
+function loadStickers(directory) {
+    return fs.readdirSync(directory)
+      .filter(file => path.extname(file).toLowerCase() === '.png')
+      .map(file => file); 
+  }
+
+rareStickers = loadStickers(rareStickersDir, "png");
+answerStickers = loadStickers(answerStickersDir, "png");
+
 
 async function handleFeedback(msg) {
     const lowerCaseBody = msg.body.toLowerCase(); 
@@ -19,23 +33,29 @@ async function handleFeedback(msg) {
     }
 }
 
+let rareChance = 0.04;
+let lastSticker = ""
 async function handleAnswer(msg) {
-    const rng = Math.floor(Math.random() * answerStickers.length);
-    const rareChance = 0.013;
+    let rng = Math.floor(Math.random() * answerStickers.length);
+    {answerStickers[rng] === lastSticker ? rng = Math.floor(Math.random() * answerStickers.length) : lastSticker = answerStickers[rng]}
+    console.log(rareChance);
     const isRare = Math.random() < rareChance;
+    console.log(isRare);
 
     if (isRare) {
-        const rng = Math.floor(Math.random() * rareStickers.length);
+        rareChance = 0.04;
+        let rng = Math.floor(Math.random() * rareStickers.length);
+        {rareStickers[rng] === lastSticker ? rng = Math.floor(Math.random() * rareStickers.length) : lastSticker = rareStickers[rng]}
         const media = MessageMedia.fromFilePath(`./resources/Answers/rares/${rareStickers[rng]}`);
         await msg.react("⁉");
-        await msg.reply(media, msg.sender, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerPack: "Grifo's Gallery" });
+        await msg.reply(media, msg.sender, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerName: "Grifo's Gallery" });
     } else {
+        rareChance += 0.02;
         const media = MessageMedia.fromFilePath(`./resources/Answers/${answerStickers[rng]}`);
         await msg.react("⁉")
-        await msg.reply(media, msg.sender, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerPack: "Grifo's Gallery" });
+        await msg.reply(media, msg.sender, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerName: "Grifo's Gallery" });
     }
 }
-
 
 async function handleCompliment(msg) {
     const rngGood =  Math.floor(Math.random() * goodReactions.length);

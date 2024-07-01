@@ -21,7 +21,7 @@
     "sharp": "^0.32.6",
     "text-to-svg": "^3.1.5",
     "url-regex": "^5.0.0",
-    "whatsapp-web.js": "^1.23.1-alpha.5"
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#webpack-exodus"
   },
   "devDependencies": {
     "typescript": "^5.2.2"

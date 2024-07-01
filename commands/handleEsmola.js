@@ -1,22 +1,9 @@
 const { MessageMedia } = require('whatsapp-web.js');
-const { sendMediaImage } = require('../utils/utils');
 
-const message = 
-`
-mim da uns trocado ai, to passando necessidade aws ta caro 😭
-
-Chaves PIX:
-
-QR Code abaixo acima
-☎️Telefone: 21959019162
-📧Email: rosalina.esmola@gmail.com
-
-`
-
+const message = require('../config').esmolaMessage;
 
 async function handleEsmola(sender,client, msg) {
     try {
-        const mediaPix = MessageMedia.fromFilePath('./resources/pix-code.png');
         msg.react("🤑");
         messagemedia = MessageMedia.fromFilePath('./resources/pix-code.png');
         await msg.reply(messagemedia, sender,{caption: message});

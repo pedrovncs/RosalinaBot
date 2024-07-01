@@ -1,9 +1,9 @@
 const { allowedIds, adminIds } = require('../config.js');
 const { MessageMedia } = require('whatsapp-web.js');
+const prefix = require('../constants.js').Commands.ADMIN_COMMAND;
 const fs = require('fs');
 
 async function handleAdmin(msg, client) {
-    const prefix = '/admin '; 
     const lowerCaseBody = msg.body.toLowerCase(); 
     if (lowerCaseBody.startsWith(prefix)) {
         const command = lowerCaseBody.slice(prefix.length).trim().split(' ')[0];
@@ -204,6 +204,19 @@ function formatId(contact) {
     return contact
 }
 
+async function handleDeploy(msg) {
+    const { lastDeployTime } = require('../config.js');
+    if (lastDeployTime) {
+        const lastDeploy = new Date(lastDeployTime);
+        const formattedTime = `${lastDeploy.getHours()}:${lastDeploy.getMinutes()}:${lastDeploy.getSeconds()}`;
+        const formattedDate = `${lastDeploy.getDate()}/${lastDeploy.getMonth() + 1}/${lastDeploy.getFullYear()}`;
+        await msg.reply(`🕒 Último deploy em: ${formattedDate} ${formattedTime}`);
+    } else {
+        await msg.reply(`Data não encontrada.`);
+    }
+    msg.react("✅");
+}
+
 const adminCommands = {
     'addgroup': addGroup,
     'adduser': addUser,
@@ -221,6 +234,7 @@ const adminCommands = {
     'configbackup': configBackup,
     'backupconfig': configBackup,
     'ajuda': handleAjudaAdmin,
+    'lastdeploy': handleDeploy,
 }
 
 module.exports = {

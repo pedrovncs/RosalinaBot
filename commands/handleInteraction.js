@@ -1,17 +1,7 @@
 const { MessageMedia } = require("whatsapp-web.js");
 
-const soundsDictionary = {
-    'china': 'help.mp3',
-    '🦋': 'butterfly.mp3',
-};
-
-const messageDictionary = {
-    'nervoso': 'Calma, amigo',
-    'calmar': 'indiferente amigo',
-    'CAPS': 'Calmar, amigo, sem gritaria',
-    'rosalixo': ['e tua mãe é piranha', 'e tu é um frouxo', 'falou o viado', 'e teu pai dá o rabo', ], 
-    'calabreso': 'deus te perdoe por essa heresia',
-};
+const soundsDictionary = require("../config").soundsDictionary;
+const messageDictionary = require("../config").messageDictionary;
 
 async function handleInteraction(msg) {
     try {

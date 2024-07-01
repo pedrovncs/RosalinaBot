@@ -5,29 +5,24 @@ const qrcode = require('qrcode-terminal');
 const { allowedIds, adminIds } = require('./config');
 const { Commands } = require('./constants');
 const handleEsmola = require('./commands/handleEsmola');
-const handleDeploy = require('./commands/handleDeploy');
 const handlePing = require('./commands/handlePing');
 const { handleAdmin } = require('./commands/handleAdmin');
 const handleStickerCommand = require('./commands/handleStickerCommand');
 const { handleFeedback } = require('./commands/handleFeedback');
-const {handleDevkit} = require('./commands/handleDevkit');
-const handleInteraction= require('./commands/handleInteraction');
+const { handleDevkit } = require('./commands/handleDevkit');
+const handleInteraction = require('./commands/handleInteraction');
 
+saveLastDeployTime();
 let flagLimpo = false;
 const cleanTime = 8000;
 
 const puppeteerdata = getDefaultChromePath() ? { executablePath: getDefaultChromePath(), args: ['--no-sandbox,'], headless: true } : {};
 const ffmpegPath = require('ffmpeg-static');
 
-
 const client = new Client({
     authStrategy: new LocalAuth(),
     ffmpegPath: ffmpegPath,
     puppeteer: puppeteerdata,
-    webVersionCache: {
-        type: 'remote',
-        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html',
-        }
 });
 
 client.on('qr', qr => {
@@ -35,9 +30,8 @@ client.on('qr', qr => {
 });
 
 client.on('ready', () => {
-    initClient(client);
     flagLimpo = cleanUp(cleanTime); 
-    saveLastDeployTime(new Date());
+    initClient(client);
     setTimeout(() => {
         client.sendMessage(adminIds[0], `-Novo deploy! 🚀 `);
     }, cleanTime + 1000);
@@ -59,9 +53,7 @@ client.on('message', async msg => {
                 handleAjuda(sender, client, msg);
             } else if (lowerCaseBody === Commands.ESMOLA_COMMAND) {
                 handleEsmola(sender, client, msg);
-            } else if (lowerCaseBody === Commands.LAST_DEPLOY_COMMAND) {
-                handleDeploy(msg);
-            }else if (lowerCaseBody === Commands.TEMPLATE_COMMAND) {
+            } else if (lowerCaseBody === Commands.TEMPLATE_COMMAND) {
                 handleDevkit(sender, client, msg);
             } else if(lowerCaseBody.includes(Commands.ADMIN_COMMAND)){
                 handleAdmin(msg, client);

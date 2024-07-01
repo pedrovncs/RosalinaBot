@@ -351,15 +351,14 @@ function getSizeFromCommand(commandParts, stickerSizeCommandIndex) {
 
 async function sendMediaSticker(sender, type, data) {
     const media = new MessageMedia(type.contentType, data, type.fileName)
-    await defaultClient.sendMessage(sender, media, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerPack: "Grifo's Gallery" })
+    await defaultClient.sendMessage(sender, media, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerName: "Grifo's Gallery" })
 }
 
 async function sendMediaStickerFromFile(msg, filePath) {
     const sender = msg.from;
     const media = MessageMedia.fromFilePath(filePath);
-    await defaultClient.sendMessage(sender, media, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerPack: "Grifo's Gallery" });
+    await defaultClient.sendMessage(sender, media, { sendMediaAsSticker: true, stickerAuthor: "Rosalina", stickerName: "Grifo's Gallery" });
 }
-
 
 async function sendMediaImage(sender, type, data) {
     const media = new MessageMedia(type.contentType, data, type.fileName);
@@ -379,17 +378,18 @@ function getSizeFromParam(param) {
     }
 }
 
-function saveLastDeployTime(lastDeployTime) {
+function saveLastDeployTime() {
+    const configPath = './config.js'; 
+
+    const currentConfig = config;
+
+    currentConfig.lastDeployTime = new Date().toISOString();
+
     try {
-        const configPath = '../config.js';
-        let config = require(configPath);
-
-        config.lastDeployTime = lastDeployTime.toISOString();
-
-        fs.writeFileSync(configPath, `module.exports = ${JSON.stringify(config, null, 2)};`);
-        console.log('Last deploy time saved successfully.');
+        fs.writeFileSync(configPath, `module.exports = ${JSON.stringify(currentConfig, null, 2)};`);
+        console.log('Tempo do último deploy salvo com sucesso.');
     } catch (error) {
-        console.error('Error saving last deploy time:', error);
+        console.error('Erro ao salvar o tempo do último deploy:', error);
     }
 }
 
@@ -407,5 +407,5 @@ module.exports = {
     getDefaultChromePath,
     isClientMentioned,
     handleStickerGeneration,
-    initClient
+    initClient,
 }
