@@ -5,6 +5,7 @@ module.exports = {
         LAST_DEPLOY_COMMAND: "/lastDeploy",
         AJUDA_COMMAND: "/ajuda",
         PING_COMMAND: "/ping",
+        ESCOLHA_COMMAND: "/escolha",
         TEMPLATE_COMMAND: "/templates",
         ADMIN_COMMAND: "/admin",
     },

@@ -1,4 +1,4 @@
-❔Comandos da Rosalina  *𝐁𝐄𝐓𝐀* v1.6.7
+❔Comandos da Rosalina  *𝐁𝐄𝐓𝐀* v1.6.8
 
 🤳 Envie uma Foto / GIF / Vídeo com a legenda "/figurinha" para gerar uma figurinha.
             
@@ -8,11 +8,13 @@
                
 🤑 Envie "/esmola" para receber as chaves do pix da Rosalina e ajudar a manter ela respirando por aparelhos.
 
+🏵️ Envie "/escolha" seguido de 2 ou mais opçoes separadas por 'ou' para que Rosalina escolha uma para você.
+
 📝 Agradeça a Rosalina marcando ela e dizendo palavras bonitas (ou não).
 
 ⁉ Você pode fazer perguntas para Rosalina, ao usar o nome dela em qualquer sentença que termine com _?_
     ℹ Você pode enviar sugestões de respostas através do formulário.
-    ℹ O comando /templates pode ser usado para ter acesso ao kit de desenvolvimento de novas respostas.
+    ℹ O comando /templates fornece acesso ao kit de desenvolvimento para respostas, envie as suas pelo formulário de contato!
 
 📌Parâmetros Opcionais 
     Os parâmetros abaixo podem ser usados juntos do comando _/figurinha_ para customizar a figurinha.

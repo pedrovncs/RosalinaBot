@@ -11,6 +11,7 @@ const handleStickerCommand = require('./commands/handleStickerCommand');
 const { handleFeedback } = require('./commands/handleFeedback');
 const { handleDevkit } = require('./commands/handleDevkit');
 const handleInteraction = require('./commands/handleInteraction');
+const { handleChoose } = require('./commands/handleChoose');
 
 saveLastDeployTime();
 let flagLimpo = false;
@@ -57,11 +58,12 @@ client.on('message', async msg => {
                 handleDevkit(sender, client, msg);
             } else if(lowerCaseBody.includes(Commands.ADMIN_COMMAND)){
                 handleAdmin(msg, client);
-            } 
+            }
             else if (lowerCaseBody.includes('rosalina')) {
                 handleFeedback(msg); 
-            } 
-            else{
+            } else if (lowerCaseBody.includes(Commands.ESCOLHA_COMMAND)) {
+                handleChoose(sender, client, msg);
+            } else{
                 null
             }
         } else {
