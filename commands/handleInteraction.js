@@ -5,6 +5,9 @@ const messageDictionary = require("../config").messageDictionary;
 
 async function handleInteraction(msg) {
     try {
+            if (msg.body.includes("/burro")) {
+                await paraDeSerBurro(msg);
+            }
             const lowerCaseBody = msg.body.toLowerCase();
             for (const key in soundsDictionary) {
                 if (lowerCaseBody.includes(key)) {
@@ -19,6 +22,18 @@ async function handleInteraction(msg) {
         } catch (error) {
         console.error('Erro ao lidar com a interação:', error);
     }
+}
+
+async function paraDeSerBurro(msg){
+    const prefix = "/burro"
+    nome = msg.body.slice(prefix.length).trim();
+    try {
+        await msg.react("🤔");
+        await msg.reply(`Tem que parar de ser burro ${"`"}${nome}${"`"}, isso sim. Tem que parar de mamar as bolas dele quando nem ao menos ele nem sabe quem você é, vc só é uma ferramenta nada a mais, tá tentando se fazer de inteligente mas não tá só tá parecendo uma piada pra todo mundo`);
+    } catch (error) {
+        console.error('Erro ao lidar com a interação:', error);
+    }
+
 }
 
 async function handleSound(msg, key) {
