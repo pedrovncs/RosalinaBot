@@ -2,22 +2,31 @@ const { allowedIds, adminIds } = require('../config.js');
 const { MessageMedia } = require('whatsapp-web.js');
 const prefix = require('../constants.js').Commands.ADMIN_COMMAND;
 const fs = require('fs');
+const path = require('path');
+
+let defaultClient = 'client'; // Placeholder for the client instance
 
 async function handleAdmin(msg, client) {
+    defaultClient = client;
     const lowerCaseBody = msg.body.toLowerCase(); 
-    if (lowerCaseBody.startsWith(prefix)) {
-        const command = lowerCaseBody.slice(prefix.length).trim().split(' ')[0];
-        if (adminIds.includes(msg.author) || adminIds.includes(msg.from)) {
-            if (adminCommands[command]) {
-                adminCommands[command](msg);
+    try{
+        if (lowerCaseBody.startsWith(prefix)) {
+            const command = lowerCaseBody.slice(prefix.length).trim().split(' ')[0];
+            if (adminIds.includes(msg.author) || adminIds.includes(msg.from)) {
+                if (adminCommands[command]) {
+                    adminCommands[command](msg);
+                } else {
+                    await msg.react('❌');
+                    await msg.reply(`❌ Comando ${command} não encontrado!`);
+                }
             } else {
                 await msg.react('❌');
-                await msg.reply(`❌ Comando ${command} não encontrado!`);
+                await msg.reply(`❌ Você não tem permissão para acessar este comando!`);
             }
-        } else {
-            await msg.react('❌');
-            await msg.reply(`❌ Você não tem permissão para acessar este comando!`);
         }
+    } finally{
+        await refreshConfig();
+        console.log('Admin command executed.');
     }
 }
 
@@ -29,6 +38,61 @@ async function configBackup(msg) {
     msg.reply(media, msg.from, { sendMediaAsDocument: true, caption: 'config module.' });
     return;
 }
+ 
+async function importConfig(msg) {
+    if (!msg.hasMedia) {
+        msg.react('❌');
+        msg.reply('❌ Forneça um arquivo de configuração para importar.');
+        return;
+    }
+
+    const media = await msg.downloadMedia();
+    if (!media.mimetype.includes('application/x-javascript') && !media.mimetype.includes('application/javascript')) {
+        msg.react('❌');
+        msg.reply('❌ Arquivo de configuração inválido. Certifique-se de que o arquivo é um módulo JavaScript.');
+        return;
+    }
+
+    try {
+        const base64Data = media.data;
+        const fileName = 'config.js';
+        saveBase64ToFile(base64Data, fileName);
+
+        await msg.react('✅');
+        await msg.reply('✅ Configuração importada com sucesso! Serei reiniciada para aplicar as alterações. 🔁');
+        setTimeout(() => {
+            createTempFile();
+        }, 2000);
+    
+    } catch (error) {
+        await msg.react('❌');
+        await msg.reply('❌ Erro ao importar configuração.');
+        console.error('Error importing config:', error);
+    }
+}
+
+
+function saveBase64ToFile(base64Data, fileName) {
+    const buffer = Buffer.from(base64Data, 'base64');
+    
+    const filePath = path.join(__dirname, '..', fileName);
+    
+    fs.writeFile(filePath, buffer, (err) => {
+        if (err) {
+            console.error('Erro ao salvar o arquivo:', err);
+            return;
+        }
+        console.log(`Arquivo salvo com sucesso em: ${filePath}`);
+    });
+}
+
+function createTempFile() {
+    const tempFilePath = './resources/reboot/temp.txt';
+
+    // Cria o arquivo temporário
+    fs.writeFileSync(tempFilePath, `Este é um arquivo temporário. ${new Date()}`);
+}
+
 
 const addGroup = (msg) => {
     const group = msg.from;
@@ -217,6 +281,16 @@ async function handleDeploy(msg) {
     msg.react("✅");
 }
 
+async function refreshConfig() {
+    console.log('Refreshing config...');
+    const configPath = path.resolve(__dirname, '../config.js');
+    console.log(`Deleting cache for: ${configPath}`); // Debugging: Log the path being deleted
+    delete require.cache[configPath];
+    const newConfig = require('../config.js');
+    console.log(`Config reloaded: ${!!newConfig}`); // Debugging: Verify the config is reloaded
+    return newConfig;
+}
+
 const adminCommands = {
     'addgroup': addGroup,
     'adduser': addUser,
@@ -235,6 +309,7 @@ const adminCommands = {
     'backupconfig': configBackup,
     'ajuda': handleAjudaAdmin,
     'lastdeploy': handleDeploy,
+    'importconfig': importConfig,
 }
 
 module.exports = {

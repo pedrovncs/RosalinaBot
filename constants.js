@@ -8,6 +8,7 @@ module.exports = {
         ESCOLHA_COMMAND: "/escolha",
         TEMPLATE_COMMAND: "/templates",
         ADMIN_COMMAND: "/admin",
+        EVERYONE_COMMAND: "/everyone",
     },
     MediaType: {
         Image: { contentType: "image/jpeg", fileName: "image.jpg" },

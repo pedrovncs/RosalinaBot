@@ -12,6 +12,7 @@ const { handleFeedback } = require('./commands/handleFeedback');
 const { handleDevkit } = require('./commands/handleDevkit');
 const handleInteraction = require('./commands/handleInteraction');
 const { handleChoose } = require('./commands/handleChoose');
+const { handleEveryone } = require('./commands/handleEveryone');
 
 saveLastDeployTime();
 let flagLimpo = false;
@@ -63,7 +64,9 @@ client.on('message', async msg => {
                 handleFeedback(msg); 
             } else if (lowerCaseBody.includes(Commands.ESCOLHA_COMMAND)) {
                 handleChoose(sender, client, msg);
-            } else{
+            } else if (lowerCaseBody.includes(Commands.EVERYONE_COMMAND)){
+                handleEveryone(sender, client, msg);
+            }else{
                 null
             }
         } else {

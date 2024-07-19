@@ -1,9 +1,10 @@
 const { MessageMedia } = require("whatsapp-web.js");
 
 const soundsDictionary = require("../config").soundsDictionary;
-const messageDictionary = require("../config").messageDictionary;
+const messageDictionary = require("../config").messageDictionary; 
 
 async function handleInteraction(msg) {
+    
     try {
             if (msg.body.includes("/burro")) {
                 await paraDeSerBurro(msg);

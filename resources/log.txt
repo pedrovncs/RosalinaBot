@@ -1,9 +1,0 @@
-v1.6.5
-
-
-#ADD
-removed await from basic calls
-
-#REMOVED
-
-
