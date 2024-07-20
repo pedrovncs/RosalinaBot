@@ -4,7 +4,7 @@ const prefix = require('../constants.js').Commands.ADMIN_COMMAND;
 const fs = require('fs');
 const path = require('path');
 
-let defaultClient = 'client'; // Placeholder for the client instance
+let defaultClient = 'client'; 
 
 async function handleAdmin(msg, client) {
     defaultClient = client;
@@ -25,7 +25,9 @@ async function handleAdmin(msg, client) {
             }
         }
     } finally{
-        await refreshConfig();
+        if (!msg.body.toLowerCase().includes('/admin reboot')) {
+        reboot(msg);
+        }
         console.log('Admin command executed.');
     }
 }
@@ -38,7 +40,7 @@ async function configBackup(msg) {
     msg.reply(media, msg.from, { sendMediaAsDocument: true, caption: 'config module.' });
     return;
 }
- 
+
 async function importConfig(msg) {
     if (!msg.hasMedia) {
         msg.react('❌');
@@ -59,16 +61,24 @@ async function importConfig(msg) {
         saveBase64ToFile(base64Data, fileName);
 
         await msg.react('✅');
-        await msg.reply('✅ Configuração importada com sucesso! Serei reiniciada para aplicar as alterações. 🔁');
+        await msg.reply('Configuração importada com sucesso! Reiniciando para aplicar as alterações... 🔁');
         setTimeout(() => {
-            createTempFile();
-        }, 2000);
+            createTempFile(msg);
+        }, 1000);
     
     } catch (error) {
         await msg.react('❌');
         await msg.reply('❌ Erro ao importar configuração.');
         console.error('Error importing config:', error);
     }
+}
+
+function reboot(msg) {
+    msg.react('✅');
+    msg.reply('Reiniciando... 🔁');
+    setTimeout(() => {  
+    createTempFile(msg) 
+    }, 500);
 }
 
 
@@ -86,11 +96,10 @@ function saveBase64ToFile(base64Data, fileName) {
     });
 }
 
-function createTempFile() {
-    const tempFilePath = './resources/reboot/temp.txt';
+function createTempFile(msg) {
+    const tempFilePath = './resources/reboot/trigger_chat_id.txt';
 
-    // Cria o arquivo temporário
-    fs.writeFileSync(tempFilePath, `Este é um arquivo temporário. ${new Date()}`);
+    fs.writeFileSync(tempFilePath, msg.from);
 }
 
 
@@ -281,16 +290,6 @@ async function handleDeploy(msg) {
     msg.react("✅");
 }
 
-async function refreshConfig() {
-    console.log('Refreshing config...');
-    const configPath = path.resolve(__dirname, '../config.js');
-    console.log(`Deleting cache for: ${configPath}`); // Debugging: Log the path being deleted
-    delete require.cache[configPath];
-    const newConfig = require('../config.js');
-    console.log(`Config reloaded: ${!!newConfig}`); // Debugging: Verify the config is reloaded
-    return newConfig;
-}
-
 const adminCommands = {
     'addgroup': addGroup,
     'adduser': addUser,
@@ -310,6 +309,7 @@ const adminCommands = {
     'ajuda': handleAjudaAdmin,
     'lastdeploy': handleDeploy,
     'importconfig': importConfig,
+    'reboot': reboot,
 }
 
 module.exports = {

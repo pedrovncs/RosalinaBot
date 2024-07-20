@@ -13,6 +13,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # personaldata
 config.js
 sticker.webp
+trigger_chat_id.txt
 
 # Runtime data
 pids

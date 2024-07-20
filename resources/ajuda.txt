@@ -14,22 +14,21 @@
 
 ⁉ Você pode fazer perguntas para Rosalina, ao usar o nome dela em qualquer sentença que termine com _?_
     ℹ Você pode enviar sugestões de respostas através do formulário.
-    ℹ O comando /templates fornece acesso ao kit de desenvolvimento para respostas.
+    ℹ O comando /templates fornece o material para criação de novas respostas.
 
 📌Parâmetros Opcionais 
     Os parâmetros abaixo podem ser usados juntos do comando _/figurinha_ para customizar a figurinha.
 
 📷 - funciona com imagens.
 🎥 - funciona com vídeos.
-📹 - funciona com vídeos em fase de testes.
 
     ℹ *-alto* para resolução máxima. 📷
     ℹ *-baixo* para uma resolução cagada. 📷
     ℹ *-crop* para usar o crop no redimensionamento. 📷
     ℹ *-original* para usar a imagem ou vídeo no tamanho original 📷 🎥 
     ℹ *-force* para forçar o dobro de duração do sticker (14s). 🎥 ⚠ₑₓₚₑᵣᵢₘₑₙₜₐₗ
-    ℹ *-texto1* _seu texto_; para adicionar um texto na parte superior do sticker. 📷📹
-    ℹ *-texto2* _seu texto_;  para adicionar um texto na parte inferior do sticker. 📷📹
+    ℹ *-texto1* _seu texto_; para adicionar um texto na parte superior do sticker. 📷 (🎥 ⚠ₑₓₚₑᵣᵢₘₑₙₜₐₗ)
+    ℹ *-texto2* _seu texto_;  para adicionar um texto na parte inferior do sticker. 📷(🎥 ⚠ₑₓₚₑᵣᵢₘₑₙₜₐₗ)
     (os textos devem terminar com " ; " para separar dos demais comandos)
 
     *_exemplo:_* /figurinha -alto -texto2 olá mundo;

@@ -1,5 +1,5 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
-const { cleanUp, saveLastDeployTime, getDefaultChromePath, isClientMentioned, initClient } = require('./utils/utils');
+const { cleanUp, saveLastDeployTime, getDefaultChromePath, isClientMentioned, initClient, checkReboot } = require('./utils/utils');
 const { handleAjuda } = require('./commands/handleAjuda');
 const qrcode = require('qrcode-terminal');
 const { allowedIds, adminIds } = require('./config');
@@ -35,7 +35,8 @@ client.on('ready', () => {
     flagLimpo = cleanUp(cleanTime); 
     initClient(client);
     setTimeout(() => {
-        client.sendMessage(adminIds[0], `-Novo deploy! 🚀 `);
+        client.sendMessage(adminIds[0], `-Novo deploy 🚀`);
+        checkReboot();
     }, cleanTime + 1000);
     console.log('Rosalina rodando!');
 });

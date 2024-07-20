@@ -32,6 +32,15 @@ async function cleanUp(cleanTime) {
     return true;
 }
 
+async function checkReboot(){
+    const chatIdPath = './resources/reboot/trigger_chat_id.txt';
+    if (fs.existsSync(chatIdPath)) {
+        const chatId = fs.readFileSync(chatIdPath, 'utf8');
+        defaultClient.sendMessage(chatId, 'Reboot bem sucedido! ✅');
+    } else {
+        console.log('Arquivo de chat de reinicialização não encontrado.');
+}}
+
 function getDefaultChromePath() {
     const isWindows = process.platform === 'win32';
     const isLinux = process.platform === 'linux';
@@ -408,4 +417,5 @@ module.exports = {
     isClientMentioned,
     handleStickerGeneration,
     initClient,
+    checkReboot
 }
